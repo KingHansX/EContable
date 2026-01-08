@@ -1,0 +1,75 @@
+# Sistema EContable - .gitignore
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencias (si se agregan en el futuro)
+node_modules/
+bower_components/
+
+# Archivos temporales
+*.tmp
+*.temp
+.cache/
+
+# Respaldos locales
+respaldos/
+backups/
+*.backup
+
+# Archivos de configuración local
+.env
+.env.local
+config.local.js
+
+# Archivos de prueba
+test/
+tests/
+*.test.js
+
+# Documentación temporal
+docs/temp/
+
+# Archivos de build (si se agregan en el futuro)
+dist/
+build/
+
+# Archivos de sistema
+*.pid
+*.seed
+*.pid.lock
+
+# Directorios de IDE
+.settings/
+.project
+.classpath
+
+# Archivos de Windows
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Archivos de macOS
+.AppleDouble
+.LSOverride
+._*
+
+# Archivos de Linux
+*~
+.directory
+.Trash-*

@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EContable - Sistema Contable Ecuador</title>
+    <meta name="description"
+        content="Sistema contable integral para Ecuador con IA asistida, compatible con normativa SRI">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/scrollbar.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/modules.css">
+    <link rel="stylesheet" href="css/modules-extra.css">
+    <link rel="stylesheet" href="css/auth.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/logo.png">
+</head>
+
+<body>
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <img src="assets/logo.png" alt="EContable Logo" style="width: 40px; height: 40px; border-radius: 8px;">
+                <h1>EContable <span class="version">v2.0</span></h1>
+            </div>
+            <button class="sidebar-toggle" id="sidebarToggle">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M3 12h18M3 6h18M3 18h18" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="user-info">
+            <div class="user-avatar">
+                <span id="userInitials">AD</span>
+            </div>
+            <div class="user-details">
+                <p class="user-name" id="userName">Administrador</p>
+                <p class="user-role" id="userRole">Contador General</p>
+            </div>
+            <button class="btn-logout" id="btnLogout" title="Cerrar Sesión">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke-width="2" stroke-linecap="round" />
+                    <polyline points="16 17 21 12 16 7" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round" />
+                    <line x1="21" y1="12" x2="9" y2="12" stroke-width="2" stroke-linecap="round" />
+                </svg>
+            </button>
+        </div>
+
+        <nav class="sidebar-nav">
+            <div class="nav-section">
+                <h3 class="nav-section-title">Principal</h3>
+                <a href="#" class="nav-item active" data-module="dashboard">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <rect x="3" y="3" width="7" height="7" stroke-width="2" />
+                        <rect x="14" y="3" width="7" height="7" stroke-width="2" />
+                        <rect x="3" y="14" width="7" height="7" stroke-width="2" />
+                        <rect x="14" y="14" width="7" height="7" stroke-width="2" />
+                    </svg>
+                    <span>Dashboard</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-section-title">Configuración</h3>
+                <a href="#" class="nav-item" data-module="multiempresa">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke-width="2" />
+                    </svg>
+                    <span>Multiempresa</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-section-title">Operaciones</h3>
+                <a href="#" class="nav-item" data-module="clientes">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path
+                            d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"
+                            stroke-width="2" />
+                    </svg>
+                    <span>Clientes & Proveedores</span>
+                </a>
+                <a href="#" class="nav-item" data-module="ventas">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" stroke-width="2" />
+                        <polyline points="14 2 14 8 20 8" stroke-width="2" />
+                        <line x1="9" y1="15" x2="15" y2="15" stroke-width="2" />
+                    </svg>
+                    <span>Ventas & Facturación</span>
+                </a>
+                <a href="#" class="nav-item" data-module="compras">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z" stroke-width="2" />
+                        <line x1="3" y1="6" x2="21" y2="6" stroke-width="2" />
+                    </svg>
+                    <span>Compras</span>
+                </a>
+                <a href="#" class="nav-item" data-module="inventario">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path
+                            d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                            stroke-width="2" />
+                    </svg>
+                    <span>Inventario</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-section-title">Contabilidad</h3>
+                <a href="#" class="nav-item" data-module="contabilidad">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" stroke-width="2" />
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" stroke-width="2" />
+                    </svg>
+                    <span>Contabilidad</span>
+                </a>
+                <a href="#" class="nav-item" data-module="cuentas">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <circle cx="12" cy="12" r="10" stroke-width="2" />
+                        <path d="M12 6v6l4 2" stroke-width="2" />
+                    </svg>
+                    <span>Cuentas por Cobrar/Pagar</span>
+                </a>
+            </div>
+
+
+            <div class="nav-section">
+                <h3 class="nav-section-title">Reportes</h3>
+                <a href="#" class="nav-item" data-module="reportes">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M18 20V10M12 20V4M6 20v-6" stroke-width="2" stroke-linecap="round" />
+                    </svg>
+                    <span>Reportes Tributarios</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-section-title">Configuración</h3>
+                <a href="#" class="nav-item" data-module="usuarios">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke-width="2" />
+                        <circle cx="9" cy="7" r="4" stroke-width="2" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke-width="2" />
+                    </svg>
+                    <span>Usuarios</span>
+                </a>
+            </div>
+
+            <div class="nav-section">
+                <h3 class="nav-section-title">Asistente IA</h3>
+                <a href="#" class="nav-item" data-module="ia-asistente">
+                    <svg class="nav-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="2" />
+                    </svg>
+                    <span>Asistente Inteligente</span>
+                    <span class="badge badge-ai">IA</span>
+                </a>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <button class="btn-logout" id="btnLogout">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9" stroke-width="2"
+                        stroke-linecap="round" />
+                </svg>
+                <span>Cerrar Sesión</span>
+            </button>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <!-- Header -->
+        <header class="content-header">
+            <div class="header-left">
+                <h2 id="pageTitle">Dashboard</h2>
+                <div class="breadcrumb">
+                    <span id="breadcrumbPath">Inicio / Dashboard</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="company-selector">
+                    <select id="companySelector" class="select-company">
+                        <option value="">Seleccionar empresa...</option>
+                    </select>
+                </div>
+                <button class="btn-icon" id="btnNotifications" title="Notificaciones">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"
+                            stroke-width="2" />
+                    </svg>
+                    <span class="notification-badge">3</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area" id="contentArea">
+            <!-- Dashboard Module (Default) -->
+            <div id="module-dashboard" class="module-content active">
+                <!-- AI Alerts Section -->
+                <div class="ai-alerts-section">
+                    <div class="section-header">
+                        <h3>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M12 2L2 7l10 5 10-5-10-5z" stroke-width="2" />
+                            </svg>
+                            Alertas Inteligentes
+                        </h3>
+                        <span class="badge badge-ai">IA</span>
+                    </div>
+                    <div class="alerts-grid" id="aiAlerts">
+                        <!-- AI alerts will be populated here -->
+                    </div>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon kpi-icon-sales">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <line x1="12" y1="1" x2="12" y2="23" stroke-width="2" />
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="kpi-trend kpi-trend-up">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" stroke-width="2" />
+                                    <polyline points="17 6 23 6 23 12" stroke-width="2" />
+                                </svg>
+                                <span>+12.5%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-content">
+                            <h4>Ventas del Mes</h4>
+                            <p class="kpi-value" id="kpiVentas">$0.00</p>
+                            <p class="kpi-subtitle">Enero 2026</p>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon kpi-icon-profit">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="22 12 18 12 15 21 9 3 6 12 2 12" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="kpi-trend kpi-trend-up">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" stroke-width="2" />
+                                    <polyline points="17 6 23 6 23 12" stroke-width="2" />
+                                </svg>
+                                <span>+8.3%</span>
+                            </div>
+                        </div>
+                        <div class="kpi-content">
+                            <h4>Utilidad Neta</h4>
+                            <p class="kpi-value" id="kpiUtilidad">$0.00</p>
+                            <p class="kpi-subtitle">Margen: <span id="margenUtilidad">0%</span></p>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon kpi-icon-tax">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+                                        stroke-width="2" />
+                                    <polyline points="14 2 14 8 20 8" stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="kpi-status">
+                                <span class="status-indicator status-warning"></span>
+                                <span>Por declarar</span>
+                            </div>
+                        </div>
+                        <div class="kpi-content">
+                            <h4>IVA por Declarar</h4>
+                            <p class="kpi-value" id="kpiIVA">$0.00</p>
+                            <p class="kpi-subtitle">Vence: <span id="vencimientoIVA">15 Feb 2026</span></p>
+                        </div>
+                    </div>
+
+                    <div class="kpi-card">
+                        <div class="kpi-header">
+                            <div class="kpi-icon kpi-icon-inventory">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                    <path
+                                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                                        stroke-width="2" />
+                                </svg>
+                            </div>
+                            <div class="kpi-status">
+                                <span class="status-indicator status-danger"></span>
+                                <span id="productosAlerta">0</span> alertas
+                            </div>
+                        </div>
+                        <div class="kpi-content">
+                            <h4>Inventario</h4>
+                            <p class="kpi-value" id="kpiInventario">$0.00</p>
+                            <p class="kpi-subtitle">Stock bajo: <span id="stockBajo">0</span> productos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="charts-section">
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Ventas vs Compras (Últimos 6 meses)</h3>
+                            <div class="chart-controls">
+                                <button class="btn-chart-control active">6M</button>
+                                <button class="btn-chart-control">1A</button>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartVentasCompras"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="chart-card">
+                        <div class="chart-header">
+                            <h3>Flujo de Caja</h3>
+                            <span class="badge badge-ai">Análisis IA</span>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="chartFlujoCaja"></canvas>
+                        </div>
+                        <div class="chart-insights" id="flujoCajaInsights">
+                            <!-- AI insights will be populated here -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <div class="section-header">
+                        <h3>Actividad Reciente</h3>
+                        <a href="#" class="link-view-all">Ver todo</a>
+                    </div>
+                    <div class="activity-list" id="activityList">
+                        <!-- Activity items will be populated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Other modules will be loaded dynamically -->
+            <div id="module-multiempresa" class="module-content"></div>
+            <div id="module-clientes" class="module-content"></div>
+            <div id="module-ventas" class="module-content"></div>
+            <div id="module-compras" class="module-content"></div>
+            <div id="module-inventario" class="module-content"></div>
+            <div id="module-contabilidad" class="module-content"></div>
+            <div id="module-cuentas" class="module-content"></div>
+            <div id="module-reportes" class="module-content"></div>
+            <div id="module-usuarios" class="module-content"></div>
+            <div id="module-ia-asistente" class="module-content"></div>
+        </div>
+    </main>
+
+    <!-- AI Assistant Floating Button -->
+    <button class="ai-assistant-fab" id="aiAssistantFab" title="Asistente IA">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke-width="2" />
+        </svg>
+    </button>
+
+    <!-- AI Assistant Chat Panel -->
+    <div class="ai-chat-panel" id="aiChatPanel">
+        <div class="ai-chat-header">
+            <div class="ai-chat-title">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z" stroke-width="2" />
+                </svg>
+                <span>Asistente Contable IA</span>
+                <span class="badge badge-ai-small">IA</span>
+            </div>
+            <button class="btn-close-chat" id="btnCloseChat">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="18" y1="6" x2="6" y2="18" stroke-width="2" />
+                    <line x1="6" y1="6" x2="18" y2="18" stroke-width="2" />
+                </svg>
+            </button>
+        </div>
+        <div class="ai-chat-messages" id="aiChatMessages">
+            <div class="ai-message">
+                <div class="ai-message-avatar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M12 2L2 7l10 5 10-5-10-5z" stroke-width="2" />
+                    </svg>
+                </div>
+                <div class="ai-message-content">
+                    <p>¡Hola! Soy tu asistente contable inteligente. Puedo ayudarte con:</p>
+                    <ul>
+                        <li>Consultas sobre IVA y retenciones</li>
+                        <li>Análisis de estados financieros</li>
+                        <li>Sugerencias de cuentas contables</li>
+                        <li>Detección de errores comunes</li>
+                    </ul>
+                    <p>¿En qué puedo ayudarte hoy?</p>
+                </div>
+            </div>
+        </div>
+        <div class="ai-chat-suggestions" id="aiChatSuggestions">
+            <button class="suggestion-chip">¿Cuánto IVA debo declarar este mes?</button>
+            <button class="suggestion-chip">¿Por qué bajó la utilidad?</button>
+            <button class="suggestion-chip">¿Qué gastos subieron más?</button>
+        </div>
+        <div class="ai-chat-input">
+            <input type="text" id="aiChatInput" placeholder="Escribe tu pregunta..." />
+            <button class="btn-send-chat" id="btnSendChat">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <line x1="22" y1="2" x2="11" y2="13" stroke-width="2" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" stroke-width="2" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal Container -->
+    <div id="modalContainer"></div>
+
+    <!-- Scripts -->
+    <script src="js/core/database.js"></script>
+    <script src="js/core/auth.js"></script>
+    <script src="js/core/utils.js"></script>
+    <script src="js/modules/multiempresa.js"></script>
+    <script src="js/modules/clientes.js"></script>
+    <script src="js/modules/ventas.js"></script>
+    <script src="js/modules/compras.js"></script>
+    <script src="js/modules/inventario.js"></script>
+    <script src="js/modules/contabilidad.js"></script>
+    <script src="js/modules/cuentas.js"></script>
+    <script src="js/modules/reportes.js"></script>
+    <script src="js/modules/usuarios.js"></script>
+    <script src="js/ia/asistente.js"></script>
+    <script src="js/ia/sugerencias.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

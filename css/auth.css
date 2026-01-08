@@ -1,0 +1,46 @@
+/* Estilos para el botón de logout */
+.btn-logout {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary, #9ca3af);
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+}
+
+.btn-logout:hover {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+}
+
+.btn-logout svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Ajustar user-info para que el botón quede alineado */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color, #e5e7eb);
+}
+
+.user-details {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Estilos mejorados para la página de login */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

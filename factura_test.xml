@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factura>
+    <infoTributaria>
+        <ruc>1790011223001</ruc>
+        <razonSocial>DISTRIBUIDORA TECNOLOGICA S.A.</razonSocial>
+        <estab>001</estab>
+        <ptoEmi>001</ptoEmi>
+        <secuencial>000012345</secuencial>
+    </infoTributaria>
+    <infoFactura>
+        <fechaEmision>25/10/2023</fechaEmision>
+        <totalSinImpuestos>1200.00</totalSinImpuestos>
+        <importeTotal>1344.00</importeTotal>
+    </infoFactura>
+    <detalles>
+        <detalle>
+            <codigoPrincipal>LAPTOP-HP-001</codigoPrincipal>
+            <descripcion>Laptop HP Pavilion 15</descripcion>
+            <cantidad>2.00</cantidad>
+            <precioUnitario>500.00</precioUnitario>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>2</codigoPorcentaje>
+                    <tarifa>12</tarifa>
+                    <baseImponible>1000.00</baseImponible>
+                    <valor>120.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+        <detalle>
+            <codigoPrincipal>MOUSE-001</codigoPrincipal>
+            <descripcion>Mouse Inalambrico Genius</descripcion>
+            <cantidad>10.00</cantidad>
+            <precioUnitario>20.00</precioUnitario>
+            <impuestos>
+                <impuesto>
+                    <codigo>2</codigo>
+                    <codigoPorcentaje>2</codigoPorcentaje>
+                    <tarifa>12</tarifa>
+                    <baseImponible>200.00</baseImponible>
+                    <valor>24.00</valor>
+                </impuesto>
+            </impuestos>
+        </detalle>
+    </detalles>
+</factura>

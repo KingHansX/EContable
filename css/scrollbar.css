@@ -1,0 +1,31 @@
+/* ============================================
+   Scrollbar Personalizado (Modo Oscuro)
+   ============================================ */
+
+/* Webkit (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-secondary);
+    border-left: 1px solid var(--border-color);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--color-gray-600);
+    border-radius: 5px;
+    border: 2px solid var(--bg-secondary);
+    /* Borde para efecto flotante */
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gray-500);
+}
+
+/* Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gray-600) var(--bg-secondary);
+}
