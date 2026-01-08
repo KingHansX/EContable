@@ -114,6 +114,23 @@ app.post('/api/productos', (req, res) => {
     });
 });
 
+// --- PERSONAS (CLIENTES Y PROVEEDORES) ---
+app.get('/api/personas', (req, res) => {
+    const { tipo } = req.query;
+    let sql = "SELECT * FROM personas";
+    let params = [];
+
+    if (tipo) {
+        sql += " WHERE tipo_persona = ?";
+        params.push(tipo);
+    }
+
+    db.all(sql, params, (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
 // --- PROVEEDORES ---
 app.get('/api/proveedores', (req, res) => {
     db.all("SELECT * FROM personas WHERE tipo_persona = 'proveedor'", [], (err, rows) => {
