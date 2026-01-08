@@ -67,6 +67,7 @@ class NominaModule {
                                     <th>Egresos (IESS)</th>
                                     <th>A Recibir</th>
                                     <th>Estado</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody id="tablaRoles">
@@ -134,11 +135,11 @@ class NominaModule {
         if (!tbody) return;
 
         if (this.roles.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="text-center text-secondary">No hay roles generados para este mes.<br>Presione "Generar Roles" para calcular.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center text-secondary">No hay roles generados para este mes.<br>Presione "Generar Roles" para calcular.</td></tr>';
             return;
         }
 
-        tbody.innerHTML = this.roles.map(r => `
+        tbody.innerHTML = this.roles.map((r, i) => `
             <tr>
                 <td><strong>${r.nombres} ${r.apellidos}</strong><br><small>${r.cedula}</small></td>
                 <td>${Utils.formatCurrency(r.sueldo_ganado)}</td>
@@ -146,8 +147,82 @@ class NominaModule {
                 <td class="text-danger">-${Utils.formatCurrency((r.aporte_iess_personal || 0) + (r.prestamos_anticipos || 0))}</td>
                 <td><strong style="font-size:1.1em">${Utils.formatCurrency(r.liquido_recibir)}</strong></td>
                 <td><span class="status-badge status-badge-paid">${r.estado}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline" onclick="window.nominaModule.printRol(${i})" title="Imprimir Rol Individual">🖨️</button>
+                </td>
             </tr>
         `).join('');
+    }
+
+    printRol(index) {
+        const rol = this.roles[index];
+        const win = window.open('', 'PRINT', 'height=600,width=800');
+
+        win.document.write(`
+            <html>
+                <head>
+                    <title>Rol de Pagos - ${rol.nombres}</title>
+                    <style>
+                        body { font-family: 'Courier New', monospace; padding: 40px; }
+                        .header { text-align: center; border-bottom: 2px dashed #000; padding-bottom: 20px; margin-bottom: 20px; }
+                        .company { font-size: 1.2em; font-weight: bold; }
+                        .title { font-size: 1.5em; margin: 10px 0; }
+                        .details { margin-bottom: 20px; }
+                        .row { display: flex; justify-content: space-between; margin-bottom: 5px; }
+                        .section-title { font-weight: bold; margin-top: 15px; border-bottom: 1px solid #ccc; }
+                        .total-row { border-top: 2px solid #000; font-weight: bold; margin-top: 20px; padding-top: 5px; font-size: 1.1em; }
+                        .signatures { margin-top: 80px; display: flex; justify-content: space-between; }
+                        .sign-box { border-top: 1px solid #000; width: 40%; text-align: center; padding-top: 10px; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <div class="company">EMPRESA DEMO S.A.</div>
+                        <div class="title">ROL DE PAGOS INDIVIDUAL</div>
+                        <div>Mes: ${document.getElementById('nominaMes').value} / ${document.getElementById('nominaAnio').value}</div>
+                    </div>
+
+                    <div class="details">
+                        <div class="row"><span>EMPLEADO:</span> <span>${rol.nombres} ${rol.apellidos}</span></div>
+                        <div class="row"><span>CÉDULA:</span> <span>${rol.cedula}</span></div>
+                        <div class="row"><span>CARGO:</span> <span>${rol.cargo}</span></div>
+                        <div class="row"><span>DÍAS TRABAJADOS:</span> <span>30</span></div>
+                    </div>
+
+                    <div class="section-title">INGRESOS</div>
+                    <div class="row"><span>Sueldo Base:</span> <span>${Utils.formatCurrency(rol.sueldo_ganado)}</span></div>
+                    <div class="row"><span>Horas Extras:</span> <span>${Utils.formatCurrency(rol.monto_horas_extras)}</span></div>
+                    <div class="row"><span>Bonificaciones:</span> <span>${Utils.formatCurrency(rol.bonificaciones)}</span></div>
+                    <div class="row" style="font-weight:bold; margin-top:5px;"><span>TOTAL INGRESOS:</span> <span>${Utils.formatCurrency(rol.sueldo_ganado + (rol.monto_horas_extras || 0) + (rol.bonificaciones || 0))}</span></div>
+
+                    <div class="section-title">EGRESOS</div>
+                    <div class="row"><span>Aporte IESS (9.45%):</span> <span>${Utils.formatCurrency(rol.aporte_iess_personal)}</span></div>
+                    <div class="row"><span>Préstamos/Anticipos:</span> <span>${Utils.formatCurrency(rol.prestamos_anticipos)}</span></div>
+                    <div class="row" style="font-weight:bold; margin-top:5px;"><span>TOTAL EGRESOS:</span> <span>${Utils.formatCurrency((rol.aporte_iess_personal || 0) + (rol.prestamos_anticipos || 0))}</span></div>
+
+                    <div class="row total-row">
+                        <span>LÍQUIDO A RECIBIR:</span>
+                        <span>${Utils.formatCurrency(rol.liquido_recibir)}</span>
+                    </div>
+
+                    <div class="signatures">
+                        <div class="sign-box">
+                            Recibí Conforme<br>
+                            ${rol.nombres} ${rol.apellidos}
+                        </div>
+                        <div class="sign-box">
+                            Autorizado Por<br>
+                            Gerente General
+                        </div>
+                    </div>
+                </body>
+            </html>
+        `);
+
+        win.document.close();
+        win.focus();
+        win.print();
+        win.close();
     }
 
     async generateRoles() {
