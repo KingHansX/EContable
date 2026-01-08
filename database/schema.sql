@@ -179,3 +179,38 @@ CREATE TABLE IF NOT EXISTS movimientos_bancarios (
     FOREIGN KEY (cuenta_bancaria_id) REFERENCES cuentas_bancarias(id),
     FOREIGN KEY (asiento_id) REFERENCES asientos(id)
 );
+
+-- 12. Activos Fijos
+CREATE TABLE IF NOT EXISTS activos_fijos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    codigo VARCHAR(50) NOT NULL UNIQUE,
+    nombre VARCHAR(200) NOT NULL,
+    descripcion TEXT,
+    fecha_adquisicion DATE NOT NULL,
+    costo_adquisicion DECIMAL(12, 2) NOT NULL,
+    valor_residual DECIMAL(12, 2) DEFAULT 0,
+    vida_util_anios INTEGER NOT NULL, -- En años
+    porcentaje_depreciacion DECIMAL(5, 2), -- Anual
+    depreciacion_acumulada DECIMAL(12, 2) DEFAULT 0,
+    valor_en_libros DECIMAL(12, 2) NOT NULL,
+    estado VARCHAR(20) DEFAULT 'ACTIVO', -- ACTIVO, VENDIDO, DE BAJA
+    categoria VARCHAR(50), -- Muebles, Edificios, Vehículos...
+    cuenta_activo_id INTEGER, -- Cuenta contable del activo
+    cuenta_gasto_id INTEGER, -- Cuenta contable del gasto depreciación
+    cuenta_depreciacion_id INTEGER, -- Cuenta contable depreciación acumulada
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS historial_depreciaciones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    activo_id INTEGER NOT NULL,
+    fecha DATE NOT NULL,
+    monto_depreciado DECIMAL(12, 2) NOT NULL,
+    valor_libros_anterior DECIMAL(12, 2) NOT NULL,
+    valor_libros_nuevo DECIMAL(12, 2) NOT NULL,
+    asiento_id INTEGER,
+    observacion TEXT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (activo_id) REFERENCES activos_fijos(id),
+    FOREIGN KEY (asiento_id) REFERENCES asientos(id)
+);

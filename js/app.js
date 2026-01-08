@@ -167,6 +167,7 @@ class App {
             'usuarios': 'Usuarios del Sistema',
             'bancos': 'Gestión Bancaria',
             'pos': 'Punto de Venta (Caja Rápida)',
+            'activos': 'Activos Fijos y Depreciación',
             'ia-asistente': 'Asistente Inteligente'
         };
 
@@ -226,6 +227,16 @@ class App {
             case 'pos':
                 this.loadPOS();
                 break;
+            case 'activos':
+                this.loadActivos();
+                break;
+        }
+    }
+
+    loadActivos() {
+        const container = document.getElementById('module-activos');
+        if (window.activosModule) {
+            window.activosModule.render(container);
         }
     }
 

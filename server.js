@@ -406,6 +406,85 @@ app.put('/api/movimientos_bancarios/:id', (req, res) => {
 });
 
 
+// --- ACTIVOS FIJOS ---
+app.get('/api/activos_fijos', (req, res) => {
+    db.all("SELECT * FROM activos_fijos WHERE estado = 'ACTIVO'", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/activos_fijos', (req, res) => {
+    const asset = req.body;
+    // Calcular valor en libros inicial
+    const valorEnLibros = asset.costo_adquisicion;
+
+    const sql = `INSERT INTO activos_fijos (codigo, nombre, descripcion, fecha_adquisicion, costo_adquisicion, valor_residual, vida_util_anios, porcentaje_depreciacion, valor_en_libros, categoria, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'ACTIVO')`;
+
+    db.run(sql, [asset.codigo, asset.nombre, asset.descripcion, asset.fecha_adquisicion, asset.costo_adquisicion, asset.valor_residual, asset.vida_util_anios, asset.porcentaje_depreciacion, valorEnLibros, asset.categoria], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ id: this.lastID, ...asset });
+    });
+});
+
+// Endpoint para ejecutar depreciación
+app.post('/api/activos_fijos/depreciar', (req, res) => {
+    // Lógica simplificada: Depreciación Lineal Mensual para todos los activos
+    // En un sistema real, esto es más complejo y selectivo.
+    const fecha = new Date().toISOString().split('T')[0];
+
+    db.all("SELECT * FROM activos_fijos WHERE estado = 'ACTIVO' AND valor_en_libros > valor_residual", [], (err, activos) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        let procesados = 0;
+        let totalDepreciado = 0;
+
+        // Iniciar transacción manualmente si es posible, o secuencial
+        // SQLite handle transaction:
+        db.serialize(() => {
+            db.run("BEGIN TRANSACTION");
+
+            const stmtUpdate = db.prepare("UPDATE activos_fijos SET depreciacion_acumulada = depreciacion_acumulada + ?, valor_en_libros = valor_en_libros - ? WHERE id = ?");
+            const stmtHist = db.prepare("INSERT INTO historial_depreciaciones (activo_id, fecha, monto_depreciado, valor_libros_anterior, valor_libros_nuevo, observacion) VALUES (?, ?, ?, ?, ?, 'Depreciación Mensual Automática')");
+
+            activos.forEach(activo => {
+                // Cálculo depreciación mensual: (Costo - Residual) / (Años * 12)
+                const montoDepreciable = activo.costo_adquisicion - (activo.valor_residual || 0);
+                const mesesVida = activo.vida_util_anios * 12;
+                let depreciacionMensual = montoDepreciable / mesesVida;
+
+                // Ajuste si el valor en libros es menor a la depreciación calculada (último mes)
+                if (activo.valor_en_libros - depreciacionMensual < (activo.valor_residual || 0)) {
+                    depreciacionMensual = activo.valor_en_libros - (activo.valor_residual || 0);
+                }
+
+                if (depreciacionMensual > 0) {
+                    const nuevoValor = activo.valor_en_libros - depreciacionMensual;
+
+                    stmtUpdate.run(depreciacionMensual, depreciacionMensual, activo.id);
+                    stmtHist.run(activo.id, fecha, depreciacionMensual, activo.valor_en_libros, nuevoValor);
+
+                    totalDepreciado += depreciacionMensual;
+                    procesados++;
+                }
+            });
+
+            stmtUpdate.finalize();
+            stmtHist.finalize();
+
+            // Generar Asiento Global de Depreciación (Opcional)
+            if (totalDepreciado > 0) {
+                const sqlAsiento = `INSERT INTO asientos (fecha, numero, concepto, tipo, estado, total_debe, total_haber) VALUES (?, ?, ?, 'EGRESO', 'MAYORIZADO', ?, ?)`;
+                db.run(sqlAsiento, [fecha, 'DEP-' + Date.now(), 'Depreciación Mensual Activos Fijos', totalDepreciado, totalDepreciado]);
+            }
+
+            db.run("COMMIT");
+            res.json({ message: "Depreciación procesada", activos_procesados: procesados, total_depreciado: totalDepreciado });
+        });
+    });
+});
+
+
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
