@@ -623,6 +623,53 @@ app.post('/api/kardex/entrada', (req, res) => {
     });
 });
 
+// --- DASHBOARD ---
+app.get('/api/dashboard/stats', (req, res) => {
+    const stats = {
+        ventasMes: 0,
+        comprasMes: 0,
+        bancosSaldo: 0,
+        cuentasPorCobrar: 0,
+        ventasDiarias: []
+    };
+
+    // Usamos Promise.all para ejecutar consultas paralelas
+    const dbAll = (query) => new Promise((resolve, reject) => {
+        db.all(query, [], (err, rows) => {
+            if (err) reject(err);
+            else resolve(rows);
+        });
+    });
+
+    const dbGet = (query) => new Promise((resolve, reject) => {
+        db.get(query, [], (err, row) => {
+            if (err) reject(err);
+            else resolve(row);
+        });
+    });
+
+    // 1. Total Ventas Mes Actual
+    const p1 = dbGet("SELECT SUM(total) as total FROM facturas WHERE strftime('%Y-%m', fecha_emision) = strftime('%Y-%m', 'now')");
+    // 2. Saldo Bancos
+    const p2 = dbGet("SELECT SUM(saldo_actual) as total FROM cuentas_bancarias WHERE activo = 1");
+    // 3. Ventas últimos 7 días
+    const p3 = dbAll("SELECT strftime('%d/%m', fecha_emision) as dia, SUM(total) as total FROM facturas WHERE fecha_emision >= date('now', '-6 days') GROUP BY dia ORDER BY fecha_emision");
+
+    Promise.all([p1, p2, p3]).then(([kv1, kv2, kv3]) => {
+        stats.ventasMes = kv1?.total || 0;
+        stats.bancosSaldo = kv2?.total || 0;
+        stats.ventasDiarias = kv3 || [];
+
+        // Simulado:
+        stats.comprasMes = stats.ventasMes * 0.65; // Estimar compras como 65% de ventas para demo
+        stats.cuentasPorCobrar = stats.ventasMes * 0.20; // Estimar crédito
+
+        res.json(stats);
+    }).catch(err => {
+        res.status(500).json({ error: err.message });
+    });
+});
+
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);

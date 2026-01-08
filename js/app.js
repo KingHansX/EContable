@@ -155,7 +155,7 @@ class App {
      */
     updateHeader(module) {
         const titles = {
-            'dashboard': 'Dashboard',
+            'dashboard': 'Tablero de Control',
             'multiempresa': 'Gestión Multiempresa',
             'clientes': 'Clientes y Proveedores',
             'ventas': 'Ventas y Facturación Electrónica',
@@ -188,10 +188,29 @@ class App {
     /**
      * Carga el contenido del módulo
      */
-    loadModuleContent(module) {
-        switch (module) {
+    loadModuleContent(moduleName) {
+        // Hide all modules
+        document.querySelectorAll('.module-content').forEach(el => el.classList.remove('active'));
+
+        // Show selected module container logic (simplificado)
+        // En implementación real, mapearíamos módulos a IDs de contenedores.
+        // Por ahora, asumimos que moduleName mapea a id="module-{name}"
+        // exceptuando nombres compuestos que mapeamos manualmente.
+
+        let containerId = `module-${moduleName}`;
+        if (moduleName === 'ia-asistente') containerId = 'module-ia'; // Ejemplo si hubiera special case
+
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.classList.add('active');
+        }
+
+        switch (moduleName) {
             case 'dashboard':
-                this.loadDashboard();
+                if (window.dashboardModule) window.dashboardModule.render(container);
+                break;
+            case 'facturacion':
+                this.loadFacturacion();
                 break;
             case 'multiempresa':
                 this.loadMultiempresa();
