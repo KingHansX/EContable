@@ -131,7 +131,7 @@ Importa compras desde:
 ## 📁 Estructura del Proyecto
 
 ```
-SISTEMA MONICA/
+ECONTABLE/
 ├── index.html                 # Página principal
 ├── css/
 │   └── styles.css            # Estilos globales
