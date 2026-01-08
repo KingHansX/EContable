@@ -173,6 +173,70 @@ app.get('/api/asientos', (req, res) => {
     });
 });
 
+// --- BANCOS ---
+app.get('/api/bancos', (req, res) => {
+    db.all("SELECT * FROM cuentas_bancarias WHERE activo = 1", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/bancos', (req, res) => {
+    const { banco_nombre, numero_cuenta, tipo_cuenta, saldo_inicial, titular } = req.body;
+    const sql = `INSERT INTO cuentas_bancarias (banco_nombre, numero_cuenta, tipo_cuenta, saldo_inicial, saldo_actual, titular) VALUES (?, ?, ?, ?, ?, ?)`;
+    db.run(sql, [banco_nombre, numero_cuenta, tipo_cuenta, saldo_inicial, saldo_inicial, titular], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ id: this.lastID, ...req.body });
+    });
+});
+
+app.get('/api/movimientos_bancarios', (req, res) => {
+    const { cuenta_id } = req.query;
+    let sql = "SELECT * FROM movimientos_bancarios";
+    let params = [];
+    if (cuenta_id) {
+        sql += " WHERE cuenta_bancaria_id = ? ORDER BY fecha DESC";
+        params.push(cuenta_id);
+    } else {
+        sql += " ORDER BY fecha DESC";
+    }
+
+    db.all(sql, params, (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/movimientos_bancarios', (req, res) => {
+    const mov = req.body;
+    db.serialize(() => {
+        db.run("BEGIN TRANSACTION");
+
+        // 1. Insertar Movimiento
+        const sqlMov = `INSERT INTO movimientos_bancarios (cuenta_bancaria_id, fecha, tipo_movimiento, numero_referencia, beneficiario, concepto, monto, tipo_accion, estado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'EMITIDO')`;
+        db.run(sqlMov, [mov.cuenta_bancaria_id, mov.fecha, mov.tipo_movimiento, mov.numero_referencia, mov.beneficiario, mov.concepto, mov.monto, mov.tipo_accion], function (err) {
+            if (err) {
+                db.run("ROLLBACK");
+                return res.status(500).json({ error: err.message });
+            }
+
+            // 2. Actualizar Saldo Cuenta Bancaria
+            let operador = mov.tipo_accion === 'DEBE' ? '+' : '-'; // Debe = Ingreso (Deposito), Haber = Egreso (Cheque)
+            // Nota: En contabilidad bancaria, DEBE es ingreso a bancos, HABER es salida.
+
+            const sqlUpdate = `UPDATE cuentas_bancarias SET saldo_actual = saldo_actual ${operador} ? WHERE id = ?`;
+            db.run(sqlUpdate, [mov.monto, mov.cuenta_bancaria_id], (err) => {
+                if (err) {
+                    db.run("ROLLBACK");
+                    return res.status(500).json({ error: err.message });
+                }
+                db.run("COMMIT");
+                res.json({ message: "Movimiento registrado con éxito" });
+            });
+        });
+    });
+});
+
 
 // Iniciar servidor
 app.listen(PORT, () => {

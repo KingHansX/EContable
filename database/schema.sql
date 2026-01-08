@@ -145,3 +145,37 @@ CREATE INDEX idx_productos_codigo ON productos(codigo);
 CREATE INDEX idx_facturas_fecha ON facturas(fecha_emision);
 CREATE INDEX idx_asientos_fecha ON asientos(fecha);
 CREATE INDEX idx_asiento_detalles_cuenta ON asiento_detalles(cuenta_id);
+
+-- 10. Cuentas Bancarias (Módulo Bancos)
+CREATE TABLE IF NOT EXISTS cuentas_bancarias (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    banco_nombre VARCHAR(100) NOT NULL,
+    numero_cuenta VARCHAR(50) NOT NULL,
+    tipo_cuenta VARCHAR(20) NOT NULL, -- 'CORRIENTE', 'AHORROS'
+    moneda VARCHAR(10) DEFAULT 'USD',
+    saldo_inicial DECIMAL(12, 2) DEFAULT 0,
+    saldo_actual DECIMAL(12, 2) DEFAULT 0,
+    fecha_apertura DATE DEFAULT CURRENT_DATE,
+    titular VARCHAR(100),
+    activo BOOLEAN DEFAULT 1,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 11. Movimientos Bancarios (Cheques, Depósitos, Transferencias)
+CREATE TABLE IF NOT EXISTS movimientos_bancarios (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cuenta_bancaria_id INTEGER NOT NULL,
+    fecha DATE NOT NULL,
+    tipo_movimiento VARCHAR(20) NOT NULL, -- 'CHEQUE', 'DEPOSITO', 'TRANSFERENCIA', 'NOTA_DEBITO', 'NOTA_CREDITO'
+    numero_referencia VARCHAR(50), -- Número de Cheque o Comprobante
+    beneficiario VARCHAR(200),
+    concepto TEXT,
+    monto DECIMAL(12, 2) NOT NULL, -- Positivo para entradas, se maneja lógica en app
+    tipo_accion VARCHAR(10) NOT NULL, -- 'DEBE' (Ingreso), 'HABER' (Egreso)
+    estado VARCHAR(20) DEFAULT 'EMITIDO', -- 'EMITIDO', 'COBRADO', 'ANULADO', 'CONCILIADO'
+    fecha_conciliacion DATE,
+    asiento_id INTEGER, -- Relación con contabilidad
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (cuenta_bancaria_id) REFERENCES cuentas_bancarias(id),
+    FOREIGN KEY (asiento_id) REFERENCES asientos(id)
+);
