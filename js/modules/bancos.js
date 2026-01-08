@@ -336,8 +336,96 @@ class BancosModule {
     }
 
     nuevoMovimiento(tipo) {
-        // Implementar modal de movimiento (Cheque/Depósito)
-        alert('Funcionalidad de registrar ' + tipo + ' en desarrollo para la próxima iteración.');
+        if (!this.currentCuenta) return;
+
+        const titulo = tipo === 'CHEQUE' ? 'Girar Cheque' : 'Nuevo Depósito';
+        const tipoAccion = tipo === 'CHEQUE' ? 'HABER' : 'DEBE'; // Egreso vs Ingreso
+
+        const modalContainer = document.getElementById('modalContainer');
+        modalContainer.innerHTML = `
+            <div class="modal-overlay">
+                <div class="modal-dialog">
+                    <div class="modal-header">
+                        <h3>${titulo}</h3>
+                        <button class="btn-close-modal">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formMovimiento">
+                            <div class="form-group">
+                                <label class="form-label">Fecha</label>
+                                <input type="date" class="form-input" id="fechaMov" value="${new Date().toISOString().split('T')[0]}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Número de Referencia (Cheque/Comp.)</label>
+                                <input type="text" class="form-input" id="referenciaMov" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Beneficiario / Depositante</label>
+                                <input type="text" class="form-input" id="beneficiarioMov" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Concepto</label>
+                                <input type="text" class="form-input" id="conceptoMov" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Monto ($)</label>
+                                <input type="number" step="0.01" class="form-input" id="montoMov" required>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary btn-close-modal">Cancelar</button>
+                        <button class="btn btn-primary" onclick="window.bancosModule.guardarMovimiento('${tipo}', '${tipoAccion}')">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        modalContainer.querySelectorAll('.btn-close-modal').forEach(b => b.onclick = () => modalContainer.innerHTML = '');
+    }
+
+    async guardarMovimiento(tipoMov, tipoAccion) {
+        const monto = parseFloat(document.getElementById('montoMov').value);
+        if (!monto || monto <= 0) {
+            Utils.showToast('Ingrese un monto válido', 'error');
+            return;
+        }
+
+        const data = {
+            cuenta_bancaria_id: this.currentCuenta.id,
+            fecha: document.getElementById('fechaMov').value,
+            tipo_movimiento: tipoMov,
+            numero_referencia: document.getElementById('referenciaMov').value,
+            beneficiario: document.getElementById('beneficiarioMov').value,
+            concepto: document.getElementById('conceptoMov').value,
+            monto: monto,
+            tipo_accion: tipoAccion
+        };
+
+        try {
+            if (db.useBackend) {
+                const res = await fetch(`${db.apiUrl}/movimientos_bancarios`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (!res.ok) throw new Error('Error en servidor');
+            }
+
+            document.getElementById('modalContainer').innerHTML = '';
+            Utils.showToast(`${tipoMov} registrado correctamente`, 'success');
+
+            // Recargar datos
+            await this.loadData(); // Para saldo actualizado en lista
+            await this.selectCuenta(this.currentCuenta.id); // Para tabla movimientos y header
+            this.render(document.getElementById('module-bancos')); // Re-render completo para actualizar saldos sidebar
+            // Reseleccionar (un poco hacky)
+            setTimeout(() => this.selectCuenta(data.cuenta_bancaria_id), 100);
+
+        } catch (error) {
+            console.error(error);
+            Utils.showToast('Error al guardar movimiento', 'error');
+        }
     }
 }
 
