@@ -248,34 +248,55 @@ class POSModule {
         const total = parseFloat(document.getElementById('posTotal').textContent.replace('$', ''));
 
         if (confirm(`¿Confirmar venta por ${Utils.formatCurrency(total)}?`)) {
-            // Lógica de guardado en backend
             const venta = {
                 fecha: new Date().toISOString(),
-                tipo: 'FACTURA',
                 cliente_id: document.getElementById('posClientSelect').value,
                 detalles: this.cart,
-                total: total
+                total: total,
+                forma_pago: 'EFECTIVO'
             };
 
-            // Simulación de guardado
             try {
-                // Aquí iría el fetch POST a /api/ventas
                 if (db.useBackend) {
-                    /*
-                    await fetch(`${db.apiUrl}/ventas`, {
+                    const response = await fetch(`${db.apiUrl}/ventas`, {
                         method: 'POST',
-                        headers: {'Content-Type': 'application/json'},
+                        headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(venta)
                     });
-                    */
+
+                    if (!response.ok) throw new Error('Error en el servidor');
+
+                    const data = await response.json();
+
+                    Utils.showToast(`Venta ${data.numero_comprobante} Registrada!`, 'success');
+
+                    if (data.xml_generado) {
+                        if (confirm("¿Descargar XML de Factura Electrónica?")) {
+                            this.downloadXML(data.xml_generado, `factura-${data.numero_comprobante}.xml`);
+                        }
+                    }
+                } else {
+                    Utils.showToast('Venta local registrada (Sin XML)', 'success');
                 }
-                Utils.showToast('Venta registrada correctamente! 📠 Imprimiendo...', 'success');
+
                 this.cart = [];
                 this.updateCartUI();
+                this.loadData();
             } catch (e) {
-                Utils.showToast('Error al procesar venta', 'error');
+                console.error(e);
+                Utils.showToast('Error al procesar venta: ' + e.message, 'error');
             }
         }
+    }
+
+    downloadXML(content, filename) {
+        const blob = new Blob([content], { type: 'text/xml' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        window.URL.revokeObjectURL(url);
     }
 }
 
