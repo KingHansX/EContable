@@ -249,3 +249,36 @@ CREATE TABLE IF NOT EXISTS roles_pago (
     FOREIGN KEY (empleado_id) REFERENCES empleados(id),
     FOREIGN KEY (asiento_id) REFERENCES asientos(id)
 );
+
+-- 14. Kárdex Avanzado (Lotes y Caducidad)
+CREATE TABLE IF NOT EXISTS lotes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    producto_id INTEGER NOT NULL,
+    numero_lote VARCHAR(50) NOT NULL,
+    fecha_elaboracion DATE,
+    fecha_caducidad DATE NOT NULL,
+    cantidad_inicial DECIMAL(12, 2) NOT NULL,
+    cantidad_actual DECIMAL(12, 2) NOT NULL,
+    costo_unitario DECIMAL(12, 4),
+    estado VARCHAR(20) DEFAULT 'ACTIVO', -- ACTIVO, AGOTADO, VENCIDO
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (producto_id) REFERENCES productos(id)
+);
+
+CREATE TABLE IF NOT EXISTS kardex_movimientos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    producto_id INTEGER NOT NULL,
+    lote_id INTEGER, -- Opcional, si el producto maneja lotes
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    tipo VARCHAR(20) NOT NULL, -- COMPRA, VENTA, DEVOLUCION_COMPRA, DEVOLUCION_VENTA, AJUSTE_POSITIVO, AJUSTE_NEGATIVO
+    documento_referencia VARCHAR(100), -- Factura #, Nota #
+    cantidad DECIMAL(12, 2) NOT NULL,
+    costo_unitario DECIMAL(12, 4),
+    total DECIMAL(12, 2),
+    saldo_cantidad DECIMAL(12, 2), -- Snapshot del saldo tras el movimiento
+    saldo_total DECIMAL(12, 2),
+    usuario_id INTEGER,
+    observacion TEXT,
+    FOREIGN KEY (producto_id) REFERENCES productos(id),
+    FOREIGN KEY (lote_id) REFERENCES lotes(id)
+);

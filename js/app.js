@@ -169,6 +169,7 @@ class App {
             'pos': 'Punto de Venta (Caja Rápida)',
             'activos': 'Activos Fijos y Depreciación',
             'nomina': 'Gestión de Talento Humano',
+            'kardex': 'Kárdex Avanzado (Lotes/Caducidad)',
             'ia-asistente': 'Asistente Inteligente'
         };
 
@@ -234,6 +235,16 @@ class App {
             case 'nomina':
                 this.loadNomina();
                 break;
+            case 'kardex':
+                this.loadKardex();
+                break;
+        }
+    }
+
+    loadKardex() {
+        const container = document.getElementById('module-kardex');
+        if (window.kardexModule) {
+            window.kardexModule.render(container);
         }
     }
 
