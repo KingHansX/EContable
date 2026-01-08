@@ -131,6 +131,7 @@ class BancosModule {
                 const res = await fetch(`${db.apiUrl}/movimientos_bancarios?cuenta_id=${cuentaId}`);
                 movimientos = await res.json();
             }
+            this.movimientosActuales = movimientos; // Guardar para conciliación
             this.renderMovimientosTabla(movimientos);
         } catch (e) {
             container.innerHTML = '<p class="text-danger">Error al cargar movimientos</p>';
@@ -181,6 +182,91 @@ class BancosModule {
 
     setupEventListeners(container) {
         container.querySelector('#btnNuevaCuenta').addEventListener('click', () => this.showModalNuevaCuenta());
+        container.querySelector('#btnConciliar').addEventListener('click', () => this.showConciliacion());
+    }
+
+    showConciliacion() {
+        if (!this.currentCuenta) {
+            Utils.showToast('Selecciona primero una cuenta para conciliar', 'warning');
+            return;
+        }
+
+        // Filtrar movimientos NO conciliados
+        const pendientes = this.movimientosActuales ? this.movimientosActuales.filter(m => m.estado !== 'CONCILIADO') : [];
+
+        const modalContainer = document.getElementById('modalContainer');
+        modalContainer.innerHTML = `
+            <div class="modal-overlay">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-header">
+                        <h3>Conciliación Bancaria - ${this.currentCuenta.banco_nombre}</h3>
+                        <button class="btn-close-modal">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Marca las transacciones que aparecen en tu Estado de Cuenta Real.</p>
+                        <div class="table-container" style="max-height: 400px; overflow-y: auto;">
+                            <table class="table">
+                                <thead>
+                                    <tr>
+                                        <th>Check</th>
+                                        <th>Fecha</th>
+                                        <th>Tipo</th>
+                                        <th>Referencia</th>
+                                        <th>Monto</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${pendientes.map(m => `
+                                        <tr>
+                                            <td><input type="checkbox" class="check-conciliar" data-id="${m.id}" value="${m.id}"></td>
+                                            <td>${Utils.formatDate(m.fecha)}</td>
+                                            <td>${m.tipo_movimiento}</td>
+                                            <td>${m.numero_referencia || ''}</td>
+                                            <td class="${m.tipo_accion === 'DEBE' ? 'text-success' : 'text-danger'}">
+                                                ${Utils.formatCurrency(m.monto)}
+                                            </td>
+                                        </tr>
+                                    `).join('')}
+                                </tbody>
+                            </table>
+                            ${pendientes.length === 0 ? '<p class="text-center p-3">Todo está conciliado 🎉</p>' : ''}
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-secondary btn-close-modal">Cancelar</button>
+                        <button class="btn btn-primary" onclick="window.bancosModule.guardarConciliacion()">Confirmar Conciliación</button>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        modalContainer.querySelectorAll('.btn-close-modal').forEach(b => b.onclick = () => modalContainer.innerHTML = '');
+    }
+
+    async guardarConciliacion() {
+        const checks = document.querySelectorAll('.check-conciliar:checked');
+        if (checks.length === 0) {
+            alert("No has seleccionado ninguna transacción.");
+            return;
+        }
+
+        const ids = Array.from(checks).map(c => c.value);
+        const fechaHoy = new Date().toISOString().split('T')[0];
+
+        if (db.useBackend) {
+            // Actualizar uno por uno (Idealmente sería un endpoint bulk)
+            for (const id of ids) {
+                await fetch(`${db.apiUrl}/movimientos_bancarios/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: 'CONCILIADO', fecha_conciliacion: fechaHoy })
+                });
+            }
+        }
+
+        document.getElementById('modalContainer').innerHTML = '';
+        Utils.showToast(`${ids.length} movimientos conciliados correctamente`, 'success');
+        await this.selectCuenta(this.currentCuenta.id); // Recargar
     }
 
     showModalNuevaCuenta() {

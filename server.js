@@ -237,6 +237,16 @@ app.post('/api/movimientos_bancarios', (req, res) => {
     });
 });
 
+app.put('/api/movimientos_bancarios/:id', (req, res) => {
+    const { id } = req.params;
+    const { estado, fecha_conciliacion } = req.body;
+
+    db.run("UPDATE movimientos_bancarios SET estado = ?, fecha_conciliacion = ? WHERE id = ?", [estado, fecha_conciliacion, id], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ message: "Estado actualizado correctly" });
+    });
+});
+
 
 // Iniciar servidor
 app.listen(PORT, () => {
