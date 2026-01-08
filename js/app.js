@@ -166,6 +166,7 @@ class App {
             'reportes': 'Reportes Tributarios',
             'usuarios': 'Usuarios del Sistema',
             'bancos': 'Gestión Bancaria',
+            'pos': 'Punto de Venta (Caja Rápida)',
             'ia-asistente': 'Asistente Inteligente'
         };
 
@@ -222,6 +223,16 @@ class App {
             case 'bancos':
                 this.loadBancos();
                 break;
+            case 'pos':
+                this.loadPOS();
+                break;
+        }
+    }
+
+    loadPOS() {
+        const container = document.getElementById('module-pos');
+        if (window.posModule) {
+            window.posModule.render(container);
         }
     }
 
