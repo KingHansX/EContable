@@ -140,11 +140,11 @@ CREATE TABLE IF NOT EXISTS asiento_detalles (
 );
 
 -- Índices para optimizar búsquedas
-CREATE INDEX idx_personas_identificacion ON personas(identificacion);
-CREATE INDEX idx_productos_codigo ON productos(codigo);
-CREATE INDEX idx_facturas_fecha ON facturas(fecha_emision);
-CREATE INDEX idx_asientos_fecha ON asientos(fecha);
-CREATE INDEX idx_asiento_detalles_cuenta ON asiento_detalles(cuenta_id);
+CREATE INDEX IF NOT EXISTS idx_personas_identificacion ON personas(identificacion);
+CREATE INDEX IF NOT EXISTS idx_productos_codigo ON productos(codigo);
+CREATE INDEX IF NOT EXISTS idx_facturas_fecha ON facturas(fecha_emision);
+CREATE INDEX IF NOT EXISTS idx_asientos_fecha ON asientos(fecha);
+CREATE INDEX IF NOT EXISTS idx_asiento_detalles_cuenta ON asiento_detalles(cuenta_id);
 
 -- 10. Cuentas Bancarias (Módulo Bancos)
 CREATE TABLE IF NOT EXISTS cuentas_bancarias (
