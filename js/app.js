@@ -104,12 +104,18 @@ class App {
             }
         });
 
-        // Toggle sidebar en móvil
+        // Toggle sidebar
         const sidebarToggle = document.getElementById('sidebarToggle');
         const sidebar = document.getElementById('sidebar');
         if (sidebarToggle && sidebar) {
             sidebarToggle.addEventListener('click', () => {
-                sidebar.classList.toggle('active');
+                // Si es móvil (ancho menor a 768px), usa 'active' para abrir/cerrar
+                if (window.innerWidth <= 768) {
+                    sidebar.classList.toggle('active');
+                } else {
+                    // Si es escritorio, usa 'collapsed' para minimizar
+                    sidebar.classList.toggle('collapsed');
+                }
             });
         }
     }
