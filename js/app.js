@@ -159,6 +159,7 @@ class App {
             'cuentas': 'Cuentas por Cobrar y Pagar',
             'reportes': 'Reportes Tributarios',
             'usuarios': 'Usuarios del Sistema',
+            'bancos': 'Gestión Bancaria',
             'ia-asistente': 'Asistente Inteligente'
         };
 
@@ -211,6 +212,9 @@ class App {
                 break;
             case 'ia-asistente':
                 this.loadIAAsistente();
+                break;
+            case 'bancos':
+                this.loadBancos();
                 break;
         }
     }
@@ -515,6 +519,13 @@ class App {
         const container = document.getElementById('module-usuarios');
         if (window.usuariosModule) {
             window.usuariosModule.render(container);
+        }
+    }
+
+    loadBancos() {
+        const container = document.getElementById('module-bancos');
+        if (window.bancosModule) {
+            window.bancosModule.render(container);
         }
     }
 
