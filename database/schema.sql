@@ -214,3 +214,38 @@ CREATE TABLE IF NOT EXISTS historial_depreciaciones (
     FOREIGN KEY (activo_id) REFERENCES activos_fijos(id),
     FOREIGN KEY (asiento_id) REFERENCES asientos(id)
 );
+
+-- 13. Nómina (Empleados y Roles de Pago)
+CREATE TABLE IF NOT EXISTS empleados (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    cedula VARCHAR(13) NOT NULL UNIQUE,
+    nombres VARCHAR(100) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    cargo VARCHAR(100),
+    fecha_ingreso DATE NOT NULL,
+    sueldo_base DECIMAL(12, 2) NOT NULL,
+    horas_extras_tarifa DECIMAL(12, 2) DEFAULT 0,
+    activo BOOLEAN DEFAULT 1,
+    email VARCHAR(100),
+    telefono VARCHAR(20),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS roles_pago (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    empleado_id INTEGER NOT NULL,
+    mes INTEGER NOT NULL,
+    anio INTEGER NOT NULL,
+    dias_trabajados INTEGER DEFAULT 30,
+    sueldo_ganado DECIMAL(12, 2),
+    monto_horas_extras DECIMAL(12, 2) DEFAULT 0,
+    bonificaciones DECIMAL(12, 2) DEFAULT 0,
+    aporte_iess_personal DECIMAL(12, 2), -- 9.45%
+    prestamos_anticipos DECIMAL(12, 2) DEFAULT 0,
+    liquido_recibir DECIMAL(12, 2),
+    estado VARCHAR(20) DEFAULT 'GENERADO', -- GENERADO, PAGADO
+    asiento_id INTEGER,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (empleado_id) REFERENCES empleados(id),
+    FOREIGN KEY (asiento_id) REFERENCES asientos(id)
+);

@@ -168,6 +168,7 @@ class App {
             'bancos': 'Gestión Bancaria',
             'pos': 'Punto de Venta (Caja Rápida)',
             'activos': 'Activos Fijos y Depreciación',
+            'nomina': 'Gestión de Talento Humano',
             'ia-asistente': 'Asistente Inteligente'
         };
 
@@ -230,6 +231,16 @@ class App {
             case 'activos':
                 this.loadActivos();
                 break;
+            case 'nomina':
+                this.loadNomina();
+                break;
+        }
+    }
+
+    loadNomina() {
+        const container = document.getElementById('module-nomina');
+        if (window.nominaModule) {
+            window.nominaModule.render(container);
         }
     }
 

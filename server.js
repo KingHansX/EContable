@@ -485,6 +485,82 @@ app.post('/api/activos_fijos/depreciar', (req, res) => {
 });
 
 
+// --- NÓMINA ---
+app.get('/api/empleados', (req, res) => {
+    db.all("SELECT * FROM empleados WHERE activo = 1", [], (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
+app.post('/api/empleados', (req, res) => {
+    const emp = req.body;
+    const sql = `INSERT INTO empleados (cedula, nombres, apellidos, cargo, fecha_ingreso, sueldo_base, email, telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`;
+    db.run(sql, [emp.cedula, emp.nombres, emp.apellidos, emp.cargo, emp.fecha_ingreso, emp.sueldo_base, emp.email, emp.telefono], function (err) {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json({ id: this.lastID, ...emp });
+    });
+});
+
+app.post('/api/roles_pago/generar', (req, res) => {
+    // Genera roles para todos los empleados activos para un mes dado
+    const { mes, anio } = req.body; // 1-12, 2024
+
+    db.all("SELECT * FROM empleados WHERE activo = 1", [], (err, empleados) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        db.serialize(() => {
+            db.run("BEGIN TRANSACTION");
+
+            const stmt = db.prepare(`INSERT INTO roles_pago (empleado_id, mes, anio, dias_trabajados, sueldo_ganado, monto_horas_extras, bonificaciones, aporte_iess_personal, prestamos_anticipos, liquido_recibir, estado) VALUES (?, ?, ?, 30, ?, 0, 0, ?, 0, ?, 'GENERADO')`);
+
+            let totalSueldos = 0;
+            const rolesGenerados = [];
+
+            empleados.forEach(e => {
+                const sueldoBase = e.sueldo_base;
+                const aporteIess = sueldoBase * 0.0945;
+                const liquido = sueldoBase - aporteIess;
+
+                stmt.run(e.id, mes, anio, sueldoBase, aporteIess, liquido);
+                totalSueldos += liquido;
+                rolesGenerados.push({ empleado: `${e.nombres} ${e.apellidos}`, liquido });
+            });
+            stmt.finalize();
+
+            // Asiento Contable de Nómina (Provisión)
+            // Debe: Gastos Sueldos (Total Bruto)
+            // Haber: IESS por Pagar (9.45% + 11.15% Patronal) - Simplificado aquí solo personal
+            // Haber: Bancos (Líquido) - Si se paga inmediatamente
+
+            // Para simplificar: Gasto Sueldos vs Bancos
+            if (totalSueldos > 0) {
+                const sqlAsiento = `INSERT INTO asientos (fecha, numero, concepto, tipo, estado, total_debe, total_haber) VALUES (?, ?, ?, 'EGRESO', 'MAYORIZADO', ?, ?)`;
+                const concepto = `Pago Nómina Mes ${mes}/${anio}`;
+                const fecha = new Date().toISOString().split('T')[0];
+                db.run(sqlAsiento, [fecha, 'NOM-' + Date.now(), concepto, totalSueldos, totalSueldos]);
+            }
+
+            db.run("COMMIT");
+            res.json({ message: "Roles generados correctamente", cantidad: empleados.length, total: totalSueldos });
+        });
+    });
+});
+
+app.get('/api/roles_pago', (req, res) => {
+    const { mes, anio } = req.query;
+    let sql = `SELECT r.*, e.nombres, e.apellidos, e.cargo, e.cedula FROM roles_pago r JOIN empleados e ON r.empleado_id = e.id`;
+    const params = [];
+    if (mes && anio) {
+        sql += ` WHERE r.mes = ? AND r.anio = ?`;
+        params.push(mes, anio);
+    }
+    db.all(sql, params, (err, rows) => {
+        if (err) return res.status(500).json({ error: err.message });
+        res.json(rows);
+    });
+});
+
 // Iniciar servidor
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en http://localhost:${PORT}`);
