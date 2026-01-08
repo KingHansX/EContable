@@ -1,4 +1,4 @@
--- SISTEMA CONTABLE MONICA - ESQUEMA DE BASE DE DATOS
+-- SISTEMA ECONTABLE - ESQUEMA DE BASE DE DATOS
 -- Compatible con SQLite / MySQL / PostgreSQL
 
 -- 1. Tabla de Empresas (Multiempresa)

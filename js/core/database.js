@@ -5,7 +5,7 @@
 
 class Database {
     constructor() {
-        this.prefix = 'monica_';
+        this.prefix = 'econtable_';
         this.apiUrl = 'http://localhost:3000/api';
         this.useBackend = true; // Flag para activar sincronización
         this.init();

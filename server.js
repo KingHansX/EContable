@@ -1,5 +1,5 @@
 /**
- * SERVIDOR BACKEND - SISTEMA MONICA
+ * SERVIDOR BACKEND - ECONTABLE
  * ---------------------------------
  * Servidor API RESTFul usando Express y SQLite.
  * Maneja la persistencia de datos real para el sistema.
