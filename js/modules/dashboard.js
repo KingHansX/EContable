@@ -50,25 +50,53 @@ class DashboardModule {
             <!-- KPI Cards -->
             <div class="stats-grid" style="margin-bottom: 30px;">
                 <div class="stat-card">
-                    <div class="stat-icon" style="background:var(--color-primary); color:white; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:10px;">💵</div>
+                    <div class="stat-icon" style="background:rgba(211, 84, 0, 0.2); color:#e67e22; width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
                     <div class="stat-label">Ventas del Mes</div>
-                    <div class="stat-value text-primary">${Utils.formatCurrency(this.data.ventasMes || 0)}</div>
+                    <div class="stat-value" style="color:#e67e22">${Utils.formatCurrency(this.data.ventasMes || 0)}</div>
                     <small class="text-secondary">Facturación bruta</small>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon" style="background:#e74c3c; color:white; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:10px;">📉</div>
+                    <div class="stat-icon" style="background:rgba(192, 57, 43, 0.2); color:#e74c3c; width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 18 13.5 8.5 8.5 13.5 1 6"></polyline>
+                            <polyline points="17 18 23 18 23 12"></polyline>
+                        </svg>
+                    </div>
                     <div class="stat-label">Gastos / Compras</div>
                     <div class="stat-value text-danger">${Utils.formatCurrency(this.data.comprasMes || 0)}</div>
                     <small class="text-secondary">Egresos operativos</small>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon" style="background:#f1c40f; color:white; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:10px;">🏦</div>
+                    <div class="stat-icon" style="background:rgba(241, 196, 15, 0.2); color:#f1c40f; width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="21" x2="21" y2="21"></line>
+                            <line x1="3" y1="10" x2="21" y2="10"></line>
+                            <path d="M5 6l7-3 7 3"></path>
+                            <path d="M4 10v11"></path>
+                            <path d="M20 10v11"></path>
+                            <path d="M8 14v3"></path>
+                            <path d="M12 14v3"></path>
+                            <path d="M16 14v3"></path>
+                        </svg>
+                    </div>
                     <div class="stat-label">Saldo en Bancos</div>
-                    <div class="stat-value">${Utils.formatCurrency(this.data.bancosSaldo || 0)}</div>
+                    <div class="stat-value" style="color:#f1c40f">${Utils.formatCurrency(this.data.bancosSaldo || 0)}</div>
                     <small class="text-secondary">Disponible real</small>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-icon" style="background:#2ecc71; color:white; width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; margin-bottom:10px;">📦</div>
+                    <div class="stat-icon" style="background:rgba(46, 204, 113, 0.2); color:#2ecc71; width:50px; height:50px; border-radius:12px; display:flex; align-items:center; justify-content:center; margin-bottom:15px;">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
                     <div class="stat-label">CxC Clientes</div>
                     <div class="stat-value text-success">${Utils.formatCurrency(this.data.cuentasPorCobrar || 0)}</div>
                     <small class="text-secondary">Cartera pendiente</small>
