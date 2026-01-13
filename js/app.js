@@ -128,11 +128,28 @@ class App {
                 if (window.innerWidth <= 768) {
                     sidebar.classList.toggle('active');
                 } else {
-                    // Si es escritorio, usa 'collapsed' para minimizar
+                    // En desktop, colapsa/expande
                     sidebar.classList.toggle('collapsed');
                 }
             });
         }
+
+        // Botón de notificaciones
+        const btnNotifications = document.getElementById('btnNotifications');
+        if (btnNotifications) {
+            btnNotifications.addEventListener('click', (e) => {
+                e.stopPropagation();
+                this.toggleNotifications();
+            });
+        }
+
+        // Cerrar notificaciones al hacer clic fuera
+        document.addEventListener('click', (e) => {
+            const notifPanel = document.getElementById('notificationsPanel');
+            if (notifPanel && !notifPanel.contains(e.target) && e.target !== btnNotifications) {
+                notifPanel.classList.remove('active');
+            }
+        });
     }
 
     /**
@@ -525,6 +542,172 @@ class App {
         this.loadModuleContent(this.currentModule);
 
         Utils.showToast('Empresa cambiada correctamente', 'success');
+    }
+
+    /**
+     * Alterna el panel de notificaciones
+     */
+    toggleNotifications() {
+        let panel = document.getElementById('notificationsPanel');
+
+        // Crear panel si no existe
+        if (!panel) {
+            panel = this.createNotificationsPanel();
+        }
+
+        // Toggle visibility
+        panel.classList.toggle('active');
+
+        // Cargar notificaciones si se abre
+        if (panel.classList.contains('active')) {
+            this.loadNotifications();
+        }
+    }
+
+    /**
+     * Crea el panel de notificaciones
+     */
+    createNotificationsPanel() {
+        const panel = document.createElement('div');
+        panel.id = 'notificationsPanel';
+        panel.className = 'notifications-panel';
+        panel.innerHTML = `
+            <div class="notifications-header">
+                <h3>Notificaciones</h3>
+                <button class="btn-clear-all" onclick="app.clearAllNotifications()">Limpiar todo</button>
+            </div>
+            <div class="notifications-list" id="notificationsList">
+                <div class="loading">Cargando...</div>
+            </div>
+        `;
+
+        // Insertar después del botón de notificaciones
+        const btnNotifications = document.getElementById('btnNotifications');
+        if (btnNotifications && btnNotifications.parentNode) {
+            btnNotifications.parentNode.insertBefore(panel, btnNotifications.nextSibling);
+        }
+
+        return panel;
+    }
+
+    /**
+     * Carga las notificaciones
+     */
+    loadNotifications() {
+        const list = document.getElementById('notificationsList');
+        if (!list) return;
+
+        const notifications = this.getNotifications();
+
+        if (notifications.length === 0) {
+            list.innerHTML = `
+                <div class="no-notifications">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="2"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke-width="2"/>
+                    </svg>
+                    <p>No hay notificaciones</p>
+                </div>
+            `;
+            return;
+        }
+
+        list.innerHTML = notifications.map(notif => `
+            <div class="notification-item ${notif.read ? 'read' : 'unread'}" data-id="${notif.id}">
+                <div class="notification-icon ${notif.type}">
+                    ${this.getNotificationIcon(notif.type)}
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${notif.title}</div>
+                    <div class="notification-message">${notif.message}</div>
+                    <div class="notification-time">${Utils.timeAgo(notif.timestamp)}</div>
+                </div>
+                ${!notif.read ? '<span class="notification-dot"></span>' : ''}
+            </div>
+        `).join('');
+
+        // Actualizar badge
+        this.updateNotificationBadge(notifications.filter(n => !n.read).length);
+    }
+
+    /**
+     * Obtiene las notificaciones
+     */
+    getNotifications() {
+        // Por ahora, generar notificaciones de ejemplo
+        // En producción, estas vendrían del backend
+        const notifications = [
+            {
+                id: 1,
+                type: 'warning',
+                title: 'Productos con stock bajo',
+                message: '5 productos necesitan reabastecimiento',
+                timestamp: new Date(Date.now() - 3600000).toISOString(),
+                read: false
+            },
+            {
+                id: 2,
+                type: 'info',
+                title: 'Nueva factura generada',
+                message: 'Factura #001-001-000123 creada exitosamente',
+                timestamp: new Date(Date.now() - 7200000).toISOString(),
+                read: false
+            },
+            {
+                id: 3,
+                type: 'success',
+                title: 'Sincronización completada',
+                message: 'Datos sincronizados con el servidor',
+                timestamp: new Date(Date.now() - 86400000).toISOString(),
+                read: true
+            }
+        ];
+
+        return notifications;
+    }
+
+    /**
+     * Obtiene el icono según el tipo de notificación
+     */
+    getNotificationIcon(type) {
+        const icons = {
+            info: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="12" y1="16" x2="12" y2="12" stroke-width="2"/><line x1="12" y1="8" x2="12.01" y2="8" stroke-width="2"/></svg>',
+            warning: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" stroke-width="2"/><line x1="12" y1="9" x2="12" y2="13" stroke-width="2"/><line x1="12" y1="17" x2="12.01" y2="17" stroke-width="2"/></svg>',
+            success: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke-width="2"/><polyline points="22 4 12 14.01 9 11.01" stroke-width="2"/></svg>',
+            danger: '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10" stroke-width="2"/><line x1="15" y1="9" x2="9" y2="15" stroke-width="2"/><line x1="9" y1="9" x2="15" y2="15" stroke-width="2"/></svg>'
+        };
+        return icons[type] || icons.info;
+    }
+
+    /**
+     * Actualiza el badge de notificaciones
+     */
+    updateNotificationBadge(count) {
+        const badge = document.querySelector('#btnNotifications .notification-badge');
+        if (badge) {
+            badge.textContent = count;
+            badge.style.display = count > 0 ? 'flex' : 'none';
+        }
+    }
+
+    /**
+     * Limpia todas las notificaciones
+     */
+    clearAllNotifications() {
+        const list = document.getElementById('notificationsList');
+        if (list) {
+            list.innerHTML = `
+                <div class="no-notifications">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke-width="2"/>
+                        <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke-width="2"/>
+                    </svg>
+                    <p>No hay notificaciones</p>
+                </div>
+            `;
+        }
+        this.updateNotificationBadge(0);
+        Utils.showToast('Notificaciones limpiadas', 'success');
     }
 
     /**
