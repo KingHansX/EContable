@@ -75,7 +75,7 @@ class App {
     init() {
         this.loadConfiguration();
         this.setupEventListeners();
-        this.loadDashboard();
+        this.navigateToModule('dashboard'); // Cargar dashboard inicial
         this.loadCompanySelector();
     }
 

@@ -43,6 +43,9 @@ class DashboardModule {
             return;
         }
 
+        // Pequeño delay para asegurar que todo esté cargado
+        await new Promise(resolve => setTimeout(resolve, 100));
+
         // Verificar dependencias críticas
         if (typeof Utils === 'undefined') {
             console.error('Dashboard: Utils no está disponible');
@@ -59,8 +62,14 @@ class DashboardModule {
         // Mostrar estado de carga
         container.innerHTML = `
             <div class="loading-container" style="padding: 40px; text-align: center;">
-                <div class="spinner"></div>
+                <div style="margin: 0 auto 20px; width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid var(--color-primary, #e67e22); border-radius: 50%; animation: spin 1s linear infinite;"></div>
                 <p>Cargando dashboard...</p>
+                <style>
+                    @keyframes spin {
+                        0% { transform: rotate(0deg); }
+                        100% { transform: rotate(360deg); }
+                    }
+                </style>
             </div>
         `;
 
