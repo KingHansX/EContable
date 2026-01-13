@@ -11,6 +11,8 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const path = require('path');
 const fs = require('fs');
+const multer = require('multer');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -71,6 +73,186 @@ app.post('/api/empresas', (req, res) => {
     db.run(sql, [ruc, razon_social, nombre_comercial, direccion, email], function (err) {
         if (err) return res.status(500).json({ error: err.message });
         res.json({ id: this.lastID, ...req.body });
+    });
+});
+
+// Configuración de Multer para subida de firmas electrónicas
+const firmasDir = path.join(__dirname, 'uploads', 'firmas');
+if (!fs.existsSync(firmasDir)) {
+    fs.mkdirSync(firmasDir, { recursive: true });
+}
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, firmasDir);
+    },
+    filename: (req, file, cb) => {
+        const empresaId = req.params.id;
+        const ext = path.extname(file.originalname);
+        cb(null, `firma_empresa_${empresaId}${ext}`);
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        const ext = path.extname(file.originalname).toLowerCase();
+        if (ext !== '.p12' && ext !== '.pfx') {
+            return cb(new Error('Solo se permiten archivos .p12 o .pfx'));
+        }
+        cb(null, true);
+    },
+    limits: {
+        fileSize: 5 * 1024 * 1024 // 5MB máximo
+    }
+});
+
+// Funciones de encriptación
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY || 'econtable-secret-key-32-chars!!'; // En producción usar variable de entorno
+const ALGORITHM = 'aes-256-cbc';
+
+function encrypt(text) {
+    const key = crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32);
+    const iv = crypto.randomBytes(16);
+    const cipher = crypto.createCipheriv(ALGORITHM, key, iv);
+    let encrypted = cipher.update(text, 'utf8', 'hex');
+    encrypted += cipher.final('hex');
+    return iv.toString('hex') + ':' + encrypted;
+}
+
+function decrypt(text) {
+    const key = crypto.scryptSync(ENCRYPTION_KEY, 'salt', 32);
+    const parts = text.split(':');
+    const iv = Buffer.from(parts[0], 'hex');
+    const encryptedText = parts[1];
+    const decipher = crypto.createDecipheriv(ALGORITHM, key, iv);
+    let decrypted = decipher.update(encryptedText, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+    return decrypted;
+}
+
+// Subir firma electrónica
+app.post('/api/empresas/:id/firma', upload.single('firma'), (req, res) => {
+    const empresaId = req.params.id;
+    const { password, titular, validaDesde, validaHasta } = req.body;
+
+    if (!req.file) {
+        return res.status(400).json({ error: 'No se proporcionó archivo de firma' });
+    }
+
+    if (!password) {
+        // Eliminar archivo subido
+        fs.unlinkSync(req.file.path);
+        return res.status(400).json({ error: 'Se requiere la contraseña de la firma' });
+    }
+
+    try {
+        // Encriptar contraseña
+        const passwordEncrypted = encrypt(password);
+
+        // Actualizar empresa
+        const sql = `UPDATE empresas SET 
+            firma_electronica_path = ?,
+            firma_password_encrypted = ?,
+            firma_titular = ?,
+            firma_valida_desde = ?,
+            firma_valida_hasta = ?,
+            firma_activa = 1,
+            updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?`;
+
+        db.run(sql, [
+            req.file.path,
+            passwordEncrypted,
+            titular,
+            validaDesde,
+            validaHasta,
+            empresaId
+        ], function (err) {
+            if (err) {
+                // Eliminar archivo si hay error
+                fs.unlinkSync(req.file.path);
+                return res.status(500).json({ error: err.message });
+            }
+
+            res.json({
+                message: 'Firma electrónica cargada exitosamente',
+                firma: {
+                    titular,
+                    validaDesde,
+                    validaHasta,
+                    activa: true
+                }
+            });
+        });
+    } catch (error) {
+        // Eliminar archivo si hay error
+        if (req.file && req.file.path) {
+            fs.unlinkSync(req.file.path);
+        }
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Obtener información de firma
+app.get('/api/empresas/:id/firma/info', (req, res) => {
+    const empresaId = req.params.id;
+
+    db.get(`SELECT firma_titular, firma_valida_desde, firma_valida_hasta, firma_activa 
+            FROM empresas WHERE id = ?`, [empresaId], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        if (!row || !row.firma_activa) {
+            return res.json({ configurada: false });
+        }
+
+        // Verificar si está vencida
+        const hoy = new Date().toISOString().split('T')[0];
+        const vencida = row.firma_valida_hasta && row.firma_valida_hasta < hoy;
+
+        res.json({
+            configurada: true,
+            titular: row.firma_titular,
+            validaDesde: row.firma_valida_desde,
+            validaHasta: row.firma_valida_hasta,
+            activa: row.firma_activa && !vencida,
+            vencida: vencida
+        });
+    });
+});
+
+// Eliminar firma electrónica
+app.delete('/api/empresas/:id/firma', (req, res) => {
+    const empresaId = req.params.id;
+
+    // Obtener path de la firma
+    db.get(`SELECT firma_electronica_path FROM empresas WHERE id = ?`, [empresaId], (err, row) => {
+        if (err) return res.status(500).json({ error: err.message });
+
+        // Eliminar archivo si existe
+        if (row && row.firma_electronica_path && fs.existsSync(row.firma_electronica_path)) {
+            try {
+                fs.unlinkSync(row.firma_electronica_path);
+            } catch (e) {
+                console.error('Error eliminando archivo de firma:', e);
+            }
+        }
+
+        // Limpiar datos de firma en BD
+        const sql = `UPDATE empresas SET 
+            firma_electronica_path = NULL,
+            firma_password_encrypted = NULL,
+            firma_titular = NULL,
+            firma_valida_desde = NULL,
+            firma_valida_hasta = NULL,
+            firma_activa = 0,
+            updated_at = CURRENT_TIMESTAMP
+            WHERE id = ?`;
+
+        db.run(sql, [empresaId], function (err) {
+            if (err) return res.status(500).json({ error: err.message });
+            res.json({ message: 'Firma electrónica eliminada exitosamente' });
+        });
     });
 });
 

@@ -12,6 +12,13 @@ CREATE TABLE IF NOT EXISTS empresas (
     email VARCHAR(100),
     logo_url TEXT,
     obligado_contabilidad BOOLEAN DEFAULT 0,
+    -- Firma Electrónica
+    firma_electronica_path TEXT,
+    firma_password_encrypted TEXT,
+    firma_valida_desde DATE,
+    firma_valida_hasta DATE,
+    firma_titular VARCHAR(255),
+    firma_activa BOOLEAN DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
