@@ -299,6 +299,36 @@ class Database {
     }
 
     /**
+     * Inserta un nuevo registro
+     */
+    insert(table, data) {
+        const records = this.get(table) || [];
+
+        // Generar ID si no existe
+        if (!data.id) {
+            const maxId = records.length > 0
+                ? Math.max(...records.map(r => r.id || 0))
+                : 0;
+            data.id = maxId + 1;
+        }
+
+        // Agregar timestamps
+        data.createdAt = data.createdAt || new Date().toISOString();
+        data.updatedAt = new Date().toISOString();
+
+        // Agregar a la lista
+        records.push(data);
+        this.set(table, records);
+
+        // Sincronizar con backend si está activo
+        if (this.useBackend) {
+            this.syncToBackend(table, data);
+        }
+
+        return data;
+    }
+
+    /**
      * Actualiza un registro
      */
     update(table, id, data) {
