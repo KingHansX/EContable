@@ -1,0 +1,299 @@
+/**
+ * EContable - Sistema de Temas
+ * Paletas de colores profesionales para personalización
+ */
+
+/* ============================================
+   TEMA POR DEFECTO: Ocean Blue
+   ============================================ */
+:root,
+[data-theme="ocean-blue"] {
+    /* Colores Principales */
+    --color-primary: #2563eb;
+    --color-primary-hover: #1d4ed8;
+    --color-primary-light: #3b82f6;
+    --color-secondary: #0ea5e9;
+    --color-accent: #06b6d4;
+
+    /* Estados */
+    --color-success: #10b981;
+    --color-warning: #f59e0b;
+    --color-danger: #ef4444;
+    --color-info: #3b82f6;
+
+    /* Fondos */
+    --bg-primary: #0f172a;
+    --bg-secondary: #1e293b;
+    --bg-tertiary: #334155;
+    --bg-hover: #475569;
+
+    /* Superficies */
+    --surface-primary: #1e293b;
+    --surface-secondary: #334155;
+    --surface-elevated: #475569;
+
+    /* Texto */
+    --text-primary: #f1f5f9;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --text-disabled: #64748b;
+
+    /* Bordes */
+    --border-color: #334155;
+    --border-color-light: #475569;
+    --border-radius: 8px;
+    --border-radius-sm: 4px;
+    --border-radius-lg: 12px;
+
+    /* Sombras */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+}
+
+/* ============================================
+   TEMA: Purple Haze
+   ============================================ */
+[data-theme="purple-haze"] {
+    --color-primary: #8b5cf6;
+    --color-primary-hover: #7c3aed;
+    --color-primary-light: #a78bfa;
+    --color-secondary: #a78bfa;
+    --color-accent: #c084fc;
+
+    --color-success: #34d399;
+    --color-warning: #fbbf24;
+    --color-danger: #f87171;
+    --color-info: #a78bfa;
+
+    --bg-primary: #18181b;
+    --bg-secondary: #27272a;
+    --bg-tertiary: #3f3f46;
+    --bg-hover: #52525b;
+
+    --surface-primary: #27272a;
+    --surface-secondary: #3f3f46;
+    --surface-elevated: #52525b;
+
+    --text-primary: #fafafa;
+    --text-secondary: #e4e4e7;
+    --text-tertiary: #a1a1aa;
+    --text-disabled: #71717a;
+
+    --border-color: #3f3f46;
+    --border-color-light: #52525b;
+}
+
+/* ============================================
+   TEMA: Emerald Forest
+   ============================================ */
+[data-theme="emerald-forest"] {
+    --color-primary: #059669;
+    --color-primary-hover: #047857;
+    --color-primary-light: #10b981;
+    --color-secondary: #10b981;
+    --color-accent: #34d399;
+
+    --color-success: #22c55e;
+    --color-warning: #f59e0b;
+    --color-danger: #dc2626;
+    --color-info: #10b981;
+
+    --bg-primary: #0c1713;
+    --bg-secondary: #1a2e23;
+    --bg-tertiary: #2d4a3a;
+    --bg-hover: #3d5a4a;
+
+    --surface-primary: #1a2e23;
+    --surface-secondary: #2d4a3a;
+    --surface-elevated: #3d5a4a;
+
+    --text-primary: #f0fdf4;
+    --text-secondary: #dcfce7;
+    --text-tertiary: #bbf7d0;
+    --text-disabled: #86efac;
+
+    --border-color: #2d4a3a;
+    --border-color-light: #3d5a4a;
+}
+
+/* ============================================
+   TEMA: Sunset Orange
+   ============================================ */
+[data-theme="sunset-orange"] {
+    --color-primary: #f97316;
+    --color-primary-hover: #ea580c;
+    --color-primary-light: #fb923c;
+    --color-secondary: #fb923c;
+    --color-accent: #fdba74;
+
+    --color-success: #4ade80;
+    --color-warning: #fbbf24;
+    --color-danger: #dc2626;
+    --color-info: #fb923c;
+
+    --bg-primary: #1c1917;
+    --bg-secondary: #292524;
+    --bg-tertiary: #44403c;
+    --bg-hover: #57534e;
+
+    --surface-primary: #292524;
+    --surface-secondary: #44403c;
+    --surface-elevated: #57534e;
+
+    --text-primary: #fafaf9;
+    --text-secondary: #e7e5e4;
+    --text-tertiary: #d6d3d1;
+    --text-disabled: #a8a29e;
+
+    --border-color: #44403c;
+    --border-color-light: #57534e;
+}
+
+/* ============================================
+   TEMA: Rose Pink
+   ============================================ */
+[data-theme="rose-pink"] {
+    --color-primary: #ec4899;
+    --color-primary-hover: #db2777;
+    --color-primary-light: #f472b6;
+    --color-secondary: #f472b6;
+    --color-accent: #f9a8d4;
+
+    --color-success: #22c55e;
+    --color-warning: #fb923c;
+    --color-danger: #be123c;
+    --color-info: #f472b6;
+
+    --bg-primary: #1f1721;
+    --bg-secondary: #2d1f2e;
+    --bg-tertiary: #4a3347;
+    --bg-hover: #5a4357;
+
+    --surface-primary: #2d1f2e;
+    --surface-secondary: #4a3347;
+    --surface-elevated: #5a4357;
+
+    --text-primary: #fdf4ff;
+    --text-secondary: #fae8ff;
+    --text-tertiary: #f5d0fe;
+    --text-disabled: #e9d5ff;
+
+    --border-color: #4a3347;
+    --border-color-light: #5a4357;
+}
+
+/* ============================================
+   TEMA: Cyber Teal
+   ============================================ */
+[data-theme="cyber-teal"] {
+    --color-primary: #14b8a6;
+    --color-primary-hover: #0d9488;
+    --color-primary-light: #2dd4bf;
+    --color-secondary: #2dd4bf;
+    --color-accent: #5eead4;
+
+    --color-success: #22c55e;
+    --color-warning: #facc15;
+    --color-danger: #f43f5e;
+    --color-info: #2dd4bf;
+
+    --bg-primary: #0a0e0f;
+    --bg-secondary: #161b1d;
+    --bg-tertiary: #1f2937;
+    --bg-hover: #374151;
+
+    --surface-primary: #161b1d;
+    --surface-secondary: #1f2937;
+    --surface-elevated: #374151;
+
+    --text-primary: #f0fdfa;
+    --text-secondary: #ccfbf1;
+    --text-tertiary: #99f6e4;
+    --text-disabled: #5eead4;
+
+    --border-color: #1f2937;
+    --border-color-light: #374151;
+}
+
+/* ============================================
+   APLICACIÓN DE VARIABLES
+   ============================================ */
+
+/* Aplicar variables a elementos comunes */
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--text-primary);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.card,
+.stat-card,
+.kpi-card {
+    background-color: var(--surface-primary);
+    border: 1px solid var(--border-color);
+}
+
+.sidebar {
+    background-color: var(--bg-secondary);
+    border-right: 1px solid var(--border-color);
+}
+
+.nav-item:hover {
+    background-color: var(--bg-hover);
+}
+
+.nav-item.active {
+    background-color: var(--color-primary);
+    color: var(--text-primary);
+}
+
+input,
+select,
+textarea {
+    background-color: var(--surface-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: var(--color-primary);
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.text-success {
+    color: var(--color-success);
+}
+
+.text-warning {
+    color: var(--color-warning);
+}
+
+.text-danger {
+    color: var(--color-danger);
+}
+
+.border {
+    border-color: var(--border-color);
+}
+
+/* Transiciones suaves para cambio de tema */
+* {
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
