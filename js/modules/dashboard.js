@@ -38,8 +38,50 @@ class DashboardModule {
     }
 
     async render(container) {
-        if (!container) return;
-        await this.loadKPIData();
+        if (!container) {
+            console.error('Dashboard: Container no proporcionado');
+            return;
+        }
+
+        // Verificar dependencias críticas
+        if (typeof Utils === 'undefined') {
+            console.error('Dashboard: Utils no está disponible');
+            container.innerHTML = `
+                <div class="error-container" style="padding: 40px; text-align: center;">
+                    <h3>Error de Inicialización</h3>
+                    <p>Las dependencias del sistema no están cargadas correctamente.</p>
+                    <p>Por favor, recarga la página.</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Mostrar estado de carga
+        container.innerHTML = `
+            <div class="loading-container" style="padding: 40px; text-align: center;">
+                <div class="spinner"></div>
+                <p>Cargando dashboard...</p>
+            </div>
+        `;
+
+        try {
+            await this.loadKPIData();
+            this.renderDashboard(container);
+        } catch (error) {
+            console.error('Error al cargar dashboard:', error);
+            container.innerHTML = `
+                <div class="error-container" style="padding: 40px; text-align: center;">
+                    <h3>Error al Cargar Dashboard</h3>
+                    <p>${error.message || 'Error desconocido'}</p>
+                    <button onclick="window.dashboardModule.render(document.getElementById('module-dashboard'))" class="btn btn-primary">
+                        Reintentar
+                    </button>
+                </div>
+            `;
+        }
+    }
+
+    renderDashboard(container) {
 
         container.innerHTML = `
             <div class="dashboard-header" style="margin-bottom: 20px;">

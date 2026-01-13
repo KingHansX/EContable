@@ -3,6 +3,9 @@
  * Gestión de login, logout y sesiones
  */
 
+// MODO DESARROLLO - Cambiar a false en producción
+const DEV_MODE = true;
+
 class AuthSystem {
     constructor() {
         this.currentUser = null;
@@ -12,13 +15,41 @@ class AuthSystem {
     }
 
     init() {
-        this.checkSession();
+        // En modo desarrollo, crear usuario automáticamente
+        if (DEV_MODE) {
+            this.createDevUser();
+        } else {
+            this.checkSession();
+        }
+    }
+
+
+    /**
+     * Crea un usuario de desarrollo (solo en DEV_MODE)
+     */
+    createDevUser() {
+        this.currentUser = {
+            id: 1,
+            username: 'admin',
+            nombre: 'Administrador',
+            email: 'admin@econtable.com',
+            rol: 'admin'
+        };
+        console.log('🔧 Modo Desarrollo: Usuario admin creado automáticamente');
     }
 
     /**
      * Verifica si hay una sesión activa
      */
     checkSession() {
+        // En modo desarrollo, siempre retornar true
+        if (DEV_MODE) {
+            if (!this.currentUser) {
+                this.createDevUser();
+            }
+            return true;
+        }
+
         const session = localStorage.getItem('econtable_session');
 
         if (session) {
@@ -113,8 +144,14 @@ class AuthSystem {
             clearTimeout(this.timeoutTimer);
         }
 
-        // Redirigir al login
-        this.redirectToLogin();
+        // No redirigir en modo desarrollo
+        if (!DEV_MODE) {
+            this.redirectToLogin();
+        } else {
+            console.log('🔧 Modo Desarrollo: Logout sin redirección');
+            // Recrear usuario de desarrollo
+            this.createDevUser();
+        }
     }
 
     /**

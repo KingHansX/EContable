@@ -19,27 +19,42 @@ class App {
      * Verifica si el usuario está autenticado
      */
     checkAuth() {
-        if (!window.authSystem || !window.authSystem.checkSession()) {
-            window.location.href = 'login.html';
-            return false;
+        // Verificar si authSystem está disponible
+        if (!window.authSystem) {
+            console.warn('⚠️ Sistema de autenticación no disponible, continuando sin auth');
+            return true; // Permitir continuar
         }
 
-        // Mostrar información del usuario en el header
-        this.displayUserInfo();
-        return true;
+        // Intentar verificar sesión
+        try {
+            if (!window.authSystem.checkSession()) {
+                console.warn('⚠️ Sesión no válida, usando modo invitado');
+                // En lugar de redirigir, permitir continuar
+                return true;
+            }
+
+            // Mostrar información del usuario en el header
+            this.displayUserInfo();
+            return true;
+        } catch (error) {
+            console.error('Error al verificar autenticación:', error);
+            return true; // Permitir continuar incluso con error
+        }
     }
 
     /**
      * Muestra la información del usuario en el header
      */
     displayUserInfo() {
+        if (!window.authSystem) return;
+
         const user = window.authSystem.getCurrentUser();
         if (user) {
             const userNameElement = document.getElementById('userName');
             const userRoleElement = document.getElementById('userRole');
 
             if (userNameElement) {
-                userNameElement.textContent = user.nombre || user.username;
+                userNameElement.textContent = user.nombre || user.username || 'Usuario';
             }
             if (userRoleElement) {
                 const roles = {
@@ -49,7 +64,7 @@ class App {
                     'comprador': 'Comprador',
                     'consulta': 'Consulta'
                 };
-                userRoleElement.textContent = roles[user.rol] || user.rol;
+                userRoleElement.textContent = roles[user.rol] || user.rol || 'Usuario';
             }
         }
     }
