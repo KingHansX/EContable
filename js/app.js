@@ -571,6 +571,13 @@ class App {
         }
     }
 
+    loadCompras() {
+        const container = document.getElementById('module-compras');
+        if (window.comprasModule) {
+            window.comprasModule.render(container);
+        }
+    }
+
     loadInventario() {
         const container = document.getElementById('module-inventario');
         if (window.inventarioModule) {
