@@ -13,16 +13,16 @@ class MultiempresaModule {
     /**
      * Inicializa el módulo
      */
-    init() {
-        this.loadEmpresas();
-        this.loadEmpresaActual();
+    async init() {
+        await this.loadEmpresas();
+        await this.loadEmpresaActual();
     }
 
     /**
      * Carga las empresas
      */
-    loadEmpresas() {
-        this.empresas = db.find('empresas') || [];
+    async loadEmpresas() {
+        this.empresas = await db.get('empresas') || [];
     }
 
     /**

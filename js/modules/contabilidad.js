@@ -10,14 +10,14 @@ class ContabilidadModule {
         this.init();
     }
 
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
         this.initializePlanCuentas();
     }
 
-    loadData() {
-        this.asientos = db.find('asientos') || [];
-        this.cuentas = db.get('planCuentas') || [];
+    async loadData() {
+        this.asientos = await db.get('asientos') || [];
+        this.cuentas = await db.get('planCuentas') || [];
     }
 
     initializePlanCuentas() {
