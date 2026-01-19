@@ -13,15 +13,15 @@ class InventarioModule {
     /**
      * Inicializa el módulo
      */
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
     }
 
     /**
      * Carga los datos
      */
-    loadData() {
-        this.productos = db.find('productos') || [];
+    async loadData() {
+        this.productos = await db.get('productos') || [];
         // Extraer categorías únicas
         this.categorias = [...new Set(this.productos.map(p => p.categoria).filter(c => c))];
     }
