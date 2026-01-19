@@ -192,6 +192,25 @@ class Database {
         }
     }
 
+    /**
+     * Buscar documentos con filtro (compatibilidad)
+     * @param {string} collection - Nombre de la colección
+     * @param {object} filter - Filtro opcional {campo: valor}
+     * @returns {Promise<Array>} Array de documentos que coinciden
+     */
+    async find(collection, filter = null) {
+        const items = await this.get(collection);
+
+        if (!filter || Object.keys(filter).length === 0) {
+            return items;
+        }
+
+        // Filtrar por los campos especificados
+        return items.filter(item => {
+            return Object.keys(filter).every(key => item[key] === filter[key]);
+        });
+    }
+
     // ============================================
     // Métodos de LocalStorage (Fallback)
     // ============================================
