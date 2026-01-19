@@ -41,20 +41,41 @@ class Database {
      * Obtener datos
      */
     async get(key) {
+        // Lista de colecciones que deben ser arrays
+        const collections = ['ventas', 'compras', 'productos', 'clientes', 'proveedores',
+            'asientos', 'bancos', 'usuarios', 'empresas', 'planCuentas'];
+
         if (this.useFirebase && firebaseDB) {
             try {
                 // Si es una colección, obtener todos los documentos
                 const data = await firebaseDB.get(key);
+
+                // Si es una colección conocida y no hay datos, devolver array vacío
+                if (collections.includes(key)) {
+                    return Array.isArray(data) ? data : [];
+                }
+
                 return data;
             } catch (error) {
                 console.error(`Error getting ${key} from Firebase:`, error);
                 if (this.fallbackToLocalStorage) {
-                    return this.getFromLocalStorage(key);
+                    const localData = this.getFromLocalStorage(key);
+                    // Si es una colección y no hay datos locales, devolver array vacío
+                    if (collections.includes(key)) {
+                        return Array.isArray(localData) ? localData : [];
+                    }
+                    return localData;
                 }
-                return null;
+                // Si es una colección, devolver array vacío en caso de error
+                return collections.includes(key) ? [] : null;
             }
         } else {
-            return this.getFromLocalStorage(key);
+            const localData = this.getFromLocalStorage(key);
+            // Si es una colección y no hay datos locales, devolver array vacío
+            if (collections.includes(key)) {
+                return Array.isArray(localData) ? localData : [];
+            }
+            return localData;
         }
     }
 
