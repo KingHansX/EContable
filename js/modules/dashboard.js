@@ -21,20 +21,83 @@ class DashboardModule {
 
     async loadKPIData() {
         try {
-            if (db.useBackend) {
-                // En un sistema real, haríamos una sola llamada a /api/dashboard/stats
-                // Aquí simularemos agregando datos de llamadas existentes o endpoint nuevo
-                const stats = await fetch(`${db.apiUrl}/dashboard/stats`).then(r => r.json()).catch(() => null);
+            // Obtener empresa seleccionada
+            const empresaId = db.get('empresaActual');
 
-                if (stats) {
-                    this.data = stats;
-                } else {
-                    // Fallback si no existe endpoint, calculamos localmente lo que podamos o mostramos ceros
-                }
-            }
+            // Calcular datos localmente desde localStorage
+            const ventas = db.get('ventas') || [];
+            const compras = db.get('compras') || [];
+
+            // Obtener mes y año actual
+            const hoy = new Date();
+            const mesActual = hoy.getMonth() + 1;
+            const anioActual = hoy.getFullYear();
+
+            // Filtrar ventas del mes actual
+            const ventasMes = ventas.filter(v => {
+                const fecha = new Date(v.fecha);
+                return fecha.getMonth() + 1 === mesActual &&
+                    fecha.getFullYear() === anioActual;
+            });
+
+            // Filtrar compras del mes actual
+            const comprasMes = compras.filter(c => {
+                const fecha = new Date(c.fecha);
+                return fecha.getMonth() + 1 === mesActual &&
+                    fecha.getFullYear() === anioActual;
+            });
+
+            // Calcular totales
+            this.data.ventasMes = ventasMes.reduce((sum, v) => sum + (v.total || 0), 0);
+            this.data.comprasMes = comprasMes.reduce((sum, c) => sum + (c.total || 0), 0);
+
+            // Calcular cuentas por cobrar (ventas pendientes)
+            this.data.cuentasPorCobrar = ventas
+                .filter(v => v.estado !== 'pagada')
+                .reduce((sum, v) => sum + (v.total || 0), 0);
+
+            // Calcular saldo en bancos (simplificado - diferencia entre ventas y compras)
+            // En un sistema real, esto vendría de los movimientos bancarios
+            this.data.bancosSaldo = this.data.ventasMes - this.data.comprasMes;
+
+            // Calcular ventas diarias de los últimos 7 días
+            this.data.ventasDiarias = this.calcularVentasDiarias(ventas);
+
         } catch (e) {
             console.warn("Dashboard data load failed", e);
+            // Mantener valores en 0 si hay error
+            this.data = {
+                ventasMes: 0,
+                comprasMes: 0,
+                cuentasPorCobrar: 0,
+                bancosSaldo: 0,
+                ventasDiarias: []
+            };
         }
+    }
+
+    calcularVentasDiarias(ventas) {
+        const hoy = new Date();
+        const dias = [];
+
+        for (let i = 6; i >= 0; i--) {
+            const fecha = new Date(hoy);
+            fecha.setDate(fecha.getDate() - i);
+
+            const ventasDia = ventas.filter(v => {
+                const fechaVenta = new Date(v.fecha);
+                return fechaVenta.toDateString() === fecha.toDateString();
+            });
+
+            const totalDia = ventasDia.reduce((sum, v) => sum + (v.total || 0), 0);
+
+            dias.push({
+                dia: fecha.toLocaleDateString('es-EC', { weekday: 'short' }),
+                total: totalDia
+            });
+        }
+
+        return dias;
     }
 
     async render(container) {
