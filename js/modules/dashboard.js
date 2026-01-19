@@ -22,11 +22,15 @@ class DashboardModule {
     async loadKPIData() {
         try {
             // Obtener empresa seleccionada
-            const empresaId = db.get('empresaActual');
+            const empresaId = await db.get('empresaActual');
 
-            // Calcular datos localmente desde localStorage
-            const ventas = db.get('ventas') || [];
-            const compras = db.get('compras') || [];
+            // Calcular datos localmente desde Firebase/localStorage
+            let ventas = await db.get('ventas');
+            let compras = await db.get('compras');
+
+            // Asegurar que sean arrays
+            if (!Array.isArray(ventas)) ventas = [];
+            if (!Array.isArray(compras)) compras = [];
 
             // Obtener mes y año actual
             const hoy = new Date();
@@ -53,7 +57,7 @@ class DashboardModule {
 
             // Calcular cuentas por cobrar (ventas pendientes)
             this.data.cuentasPorCobrar = ventas
-                .filter(v => v.estado !== 'pagada')
+                .filter(v => v && v.estado !== 'pagada')
                 .reduce((sum, v) => sum + (v.total || 0), 0);
 
             // Calcular saldo en bancos (simplificado - diferencia entre ventas y compras)
@@ -77,6 +81,9 @@ class DashboardModule {
     }
 
     calcularVentasDiarias(ventas) {
+        // Asegurar que ventas sea un array
+        if (!Array.isArray(ventas)) ventas = [];
+
         const hoy = new Date();
         const dias = [];
 
@@ -85,6 +92,7 @@ class DashboardModule {
             fecha.setDate(fecha.getDate() - i);
 
             const ventasDia = ventas.filter(v => {
+                if (!v || !v.fecha) return false;
                 const fechaVenta = new Date(v.fecha);
                 return fechaVenta.toDateString() === fecha.toDateString();
             });
