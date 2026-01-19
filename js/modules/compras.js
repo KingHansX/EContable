@@ -1038,19 +1038,34 @@ class ComprasModule {
 
     /**
      * Parsea archivo XML (formato SRI)
-     */
-    /**
-     * Parsea archivo XML (formato SRI)
+     * Soporta tanto formato directo como formato de autorización con CDATA
      */
     parsearXML(text) {
         const compras = [];
         const parser = new DOMParser();
-        const xmlDoc = parser.parseFromString(text, 'text/xml');
+        let xmlDoc = parser.parseFromString(text, 'text/xml');
 
-        // Buscar facturas en el XML
-        // Nota: Un XML SRI suele tener UNA sola factura, pero por si acaso es un lote:
+        // PASO 1: Detectar si es formato de autorización
+        const autorizacion = xmlDoc.querySelector('autorizacion');
+        if (autorizacion) {
+            // Verificar estado de autorización
+            const estado = this.getNodeText(autorizacion, 'estado');
+            if (estado !== 'AUTORIZADO') {
+                console.warn('Factura no autorizada, estado:', estado);
+                return compras; // Retornar vacío si no está autorizada
+            }
+
+            // Extraer el XML del CDATA
+            const comprobanteNode = autorizacion.querySelector('comprobante');
+            if (comprobanteNode) {
+                const cdataContent = comprobanteNode.textContent.trim();
+                // Parsear el XML interno
+                xmlDoc = parser.parseFromString(cdataContent, 'text/xml');
+            }
+        }
+
+        // PASO 2: Buscar facturas en el XML
         const facturas = xmlDoc.querySelectorAll('factura');
-        // Si no hay tags 'factura', intentar buscar desde la raiz si es una factura individual
         const docs = facturas.length > 0 ? Array.from(facturas) : [xmlDoc];
 
         for (let doc of docs) {
@@ -1060,35 +1075,64 @@ class ComprasModule {
 
             if (!infoTributaria || !infoFactura) continue;
 
+            // PASO 3: Extraer información del proveedor
             const ruc = this.getNodeText(infoTributaria, 'ruc');
             const razonSocial = this.getNodeText(infoTributaria, 'razonSocial');
+            const nombreComercial = this.getNodeText(infoTributaria, 'nombreComercial') || razonSocial;
             const estab = this.getNodeText(infoTributaria, 'estab') || '001';
             const ptoEmi = this.getNodeText(infoTributaria, 'ptoEmi') || '001';
             const secuencial = this.getNodeText(infoTributaria, 'secuencial') || '000000001';
             const numeroComprobante = `${estab}-${ptoEmi}-${secuencial}`;
 
+            // PASO 4: Extraer información de la factura
             const fecha = this.getNodeText(infoFactura, 'fechaEmision');
             const totalSinImpuestos = parseFloat(this.getNodeText(infoFactura, 'totalSinImpuestos') || 0);
             const importeTotal = parseFloat(this.getNodeText(infoFactura, 'importeTotal') || 0);
 
-            // Parsear detalles
+            // Extraer forma de pago si existe
+            let formaPago = 'Transferencia';
+            const pagosNode = infoFactura.querySelector('pagos pago');
+            if (pagosNode) {
+                const codigoFormaPago = this.getNodeText(pagosNode, 'formaPago');
+                formaPago = this.mapearFormaPagoSRI(codigoFormaPago);
+            }
+
+            // PASO 5: Parsear detalles con mapeo correcto de IVA
             const detalles = [];
             if (detallesNode) {
                 const items = detallesNode.querySelectorAll('detalle');
                 items.forEach(item => {
-                    const codigo = this.getNodeText(item, 'codigoPrincipal') || this.getNodeText(item, 'codigoAuxiliar') || 'SIN-CODIGO';
+                    const codigo = this.getNodeText(item, 'codigoPrincipal') ||
+                        this.getNodeText(item, 'codigoAuxiliar') || 'SIN-CODIGO';
                     const descripcion = this.getNodeText(item, 'descripcion');
                     const cantidad = parseFloat(this.getNodeText(item, 'cantidad') || 0);
                     const precioUnitario = parseFloat(this.getNodeText(item, 'precioUnitario') || 0);
 
-                    // Calcular IVA del item si es posible
+                    // MAPEO CORRECTO DE IVA SEGÚN CÓDIGOS DEL SRI
                     let tarifaIVA = 0;
                     const impuestos = item.querySelectorAll('impuesto');
                     impuestos.forEach(imp => {
-                        // Código 2 es IVA, Tarifa 2 es 12% (histórico) o actual según tabla
-                        // Simplificación: si tarifa es > 0 asumimos 12, sino 0
-                        const tarifa = parseFloat(this.getNodeText(imp, 'tarifa') || 0);
-                        if (tarifa > 0) tarifaIVA = 12; // Asumir 12% estándar por defecto si hay impuesto
+                        const codigo = this.getNodeText(imp, 'codigo');
+                        if (codigo === '2') { // Código 2 = IVA
+                            const codigoPorcentaje = this.getNodeText(imp, 'codigoPorcentaje');
+
+                            // Mapeo según tabla oficial del SRI
+                            switch (codigoPorcentaje) {
+                                case '4': // Código 4 = 15%
+                                    tarifaIVA = 15;
+                                    break;
+                                case '2': // Código 2 = 12% (antiguo)
+                                    tarifaIVA = 12;
+                                    break;
+                                case '0': // Código 0 = 0%
+                                    tarifaIVA = 0;
+                                    break;
+                                default:
+                                    // Fallback: usar el valor de tarifa directamente
+                                    const tarifa = parseFloat(this.getNodeText(imp, 'tarifa') || 0);
+                                    tarifaIVA = tarifa;
+                            }
+                        }
                     });
 
                     detalles.push({
@@ -1107,18 +1151,35 @@ class ComprasModule {
                 numeroComprobante,
                 tipoComprobante: 'Factura',
                 proveedorIdentificacion: ruc,
-                proveedorNombre: razonSocial, // Para creación automática
-                rawDetalles: detalles, // Detalles crudos para procesar después
+                proveedorNombre: nombreComercial, // Usar nombre comercial preferentemente
+                rawDetalles: detalles,
                 subtotal: totalSinImpuestos,
                 iva: importeTotal - totalSinImpuestos,
                 total: importeTotal,
                 estado: 'pagada',
-                formaPago: 'Transferencia',
+                formaPago: formaPago,
                 observaciones: 'Cargado desde XML SRI'
             });
         }
 
         return compras;
+    }
+
+    /**
+     * Mapea código de forma de pago del SRI a texto legible
+     */
+    mapearFormaPagoSRI(codigo) {
+        const formasPago = {
+            '01': 'Efectivo',
+            '15': 'Transferencia',
+            '16': 'Transferencia',
+            '17': 'Transferencia',
+            '18': 'Transferencia',
+            '19': 'Tarjeta',
+            '20': 'Otros',
+            '21': 'Otros'
+        };
+        return formasPago[codigo] || 'Transferencia';
     }
 
     getNodeText(parent, tag) {
