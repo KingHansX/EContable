@@ -1,47 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<factura>
-    <infoTributaria>
-        <ruc>1790011223001</ruc>
-        <razonSocial>DISTRIBUIDORA TECNOLOGICA S.A.</razonSocial>
-        <estab>001</estab>
-        <ptoEmi>001</ptoEmi>
-        <secuencial>000012345</secuencial>
-    </infoTributaria>
-    <infoFactura>
-        <fechaEmision>25/10/2023</fechaEmision>
-        <totalSinImpuestos>1200.00</totalSinImpuestos>
-        <importeTotal>1344.00</importeTotal>
-    </infoFactura>
-    <detalles>
-        <detalle>
-            <codigoPrincipal>LAPTOP-HP-001</codigoPrincipal>
-            <descripcion>Laptop HP Pavilion 15</descripcion>
-            <cantidad>2.00</cantidad>
-            <precioUnitario>500.00</precioUnitario>
-            <impuestos>
-                <impuesto>
-                    <codigo>2</codigo>
-                    <codigoPorcentaje>2</codigoPorcentaje>
-                    <tarifa>12</tarifa>
-                    <baseImponible>1000.00</baseImponible>
-                    <valor>120.00</valor>
-                </impuesto>
-            </impuestos>
-        </detalle>
-        <detalle>
-            <codigoPrincipal>MOUSE-001</codigoPrincipal>
-            <descripcion>Mouse Inalambrico Genius</descripcion>
-            <cantidad>10.00</cantidad>
-            <precioUnitario>20.00</precioUnitario>
-            <impuestos>
-                <impuesto>
-                    <codigo>2</codigo>
-                    <codigoPorcentaje>2</codigoPorcentaje>
-                    <tarifa>12</tarifa>
-                    <baseImponible>200.00</baseImponible>
-                    <valor>24.00</valor>
-                </impuesto>
-            </impuestos>
-        </detalle>
-    </detalles>
-</factura>
+<autorizacion>
+<estado>AUTORIZADO</estado>
+<numeroAutorizacion>1811202501189014150800120010110004839680000099910</numeroAutorizacion>
+<fechaAutorizacion>2025-11-18T21:40:11-05:00</fechaAutorizacion>
+<ambiente>PRODUCCIÓN</ambiente>
+<comprobante>
+<![CDATA[ <?xml version="1.0" encoding="UTF-8" standalone="no"?><factura id="comprobante" version="1.1.0"><infoTributaria><ambiente>2</ambiente><tipoEmision>1</tipoEmision><razonSocial>ALOBAMBA CIA LTDA</razonSocial><nombreComercial>ALOBAMBA CIA LTDA</nombreComercial><ruc>1890141508001</ruc><claveAcceso>1811202501189014150800120010110004839680000099910</claveAcceso><codDoc>01</codDoc><estab>001</estab><ptoEmi>011</ptoEmi><secuencial>000483968</secuencial><dirMatriz>PANAMERICANA SUR KM 10 ALOBAMBA PRINCIPAL SN</dirMatriz><agenteRetencion>1</agenteRetencion></infoTributaria><infoFactura><fechaEmision>18/11/2025</fechaEmision><dirEstablecimiento>PANAMERICANA SUR KM 10 ALOBAMBA PRINCIPAL SN</dirEstablecimiento><obligadoContabilidad>SI</obligadoContabilidad><tipoIdentificacionComprador>04</tipoIdentificacionComprador><razonSocialComprador>BADILLO PUCHA JOSE GUSTAVO</razonSocialComprador><identificacionComprador>0603248071001</identificacionComprador><direccionComprador>O</direccionComprador><totalSinImpuestos>8.70</totalSinImpuestos><totalSubsidio>0.00</totalSubsidio><totalDescuento>0</totalDescuento><totalConImpuestos><totalImpuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><baseImponible>8.70</baseImponible><valor>1.30</valor></totalImpuesto></totalConImpuestos><propina>0</propina><importeTotal>10.00</importeTotal><placa>PLH0671</placa><pagos><pago><formaPago>01</formaPago><total>10.00</total><plazo>0</plazo><unidadTiempo>dias</unidadTiempo></pago></pagos></infoFactura><detalles><detalle><codigoPrincipal>0101</codigoPrincipal><codigoAuxiliar>1</codigoAuxiliar><descripcion>EXTRA</descripcion><cantidad>3.529</cantidad><precioUnitario>2.464348</precioUnitario><precioSinSubsidio>0</precioSinSubsidio><descuento>0</descuento><precioTotalSinImpuesto>8.70</precioTotalSinImpuesto><impuestos><impuesto><codigo>2</codigo><codigoPorcentaje>4</codigoPorcentaje><tarifa>15</tarifa><baseImponible>8.70</baseImponible><valor>1.30</valor></impuesto></impuestos></detalle></detalles><infoAdicional><campoAdicional nombre="Num_Factura">001-011-000483968</campoAdicional><campoAdicional nombre="E_MAIL">alobamba.efactura@gmail.com</campoAdicional><campoAdicional nombre="Direccion_Cliente">O</campoAdicional><campoAdicional nombre="Telefono_Cliente">0</campoAdicional><campoAdicional nombre="Codigo_Cliente">18749</campoAdicional></infoAdicional><ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns:etsi="http://uri.etsi.org/01903/v1.3.2#" Id="Signature644133"> <ds:SignedInfo Id="Signature-SignedInfo100917"> <ds:CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/> <ds:SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1"/> <ds:Reference Id="SignedPropertiesID501666" Type="http://uri.etsi.org/01903#SignedProperties" URI="#Signature644133-SignedProperties258604"> <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/> <ds:DigestValue>upfO9E4Dmw7kPJJtpWFQPc7y7wQ=</ds:DigestValue> </ds:Reference> <ds:Reference URI="#Certificate1852752"> <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/> <ds:DigestValue>KU6L0nboxtsRxx5JQp0g3eIUXqM=</ds:DigestValue> </ds:Reference> <ds:Reference Id="Reference-ID-491027" URI="#comprobante"> <ds:Transforms> <ds:Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/> </ds:Transforms> <ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/> <ds:DigestValue>Amt0iipVZqzg0DGpQTp1n6VRaro=</ds:DigestValue> </ds:Reference> </ds:SignedInfo> <ds:SignatureValue Id="SignatureValue575554"> j6oPEbZIMvcVb+d5mK4a+BpPGzWDQJ2Ml8/eTHXU7i1Jgvid7BhmBp/+Tt0t858eR7sKJ9nkO3x+ koyoy3jkla2lYJjsbzNF5fkv1qCw88gK7Z7AWQyTmq8zESnk1tpe/zytt+9B5CvM2/8ZhF3HPI54 gJBXujICm7BJ0QiUZ9BC8KusA4Bnt1dNCQ3cCfVo+j+T7LTw3BNEHv6kcW6HoC3r0xVUPUhzq/+t oobpYcD6s1rGDkYp4Px8i0KZ2reEAuCQ+ISWcTY3u+aMMMhBks8/Zsy1x0V+fuVfGh4IPk4k8Eym aqMG1a/jrM38HZcbVK88SdKmpzFjAdOZAW4ikQ== </ds:SignatureValue> <ds:KeyInfo Id="Certificate1852752"> <ds:X509Data> <ds:X509Certificate> MIIJzTCCB7WgAwIBAgIISVKPRR6cLYQwDQYJKoZIhvcNAQELBQAwgbgxCzAJBgNVBAYTAkVTMUQw QgYDVQQHDDtCYXJjZWxvbmEgKHNlZSBjdXJyZW50IGFkZHJlc3MgYXQgd3d3LnVhbmF0YWNhLmNv bS9hZGRyZXNzKTEWMBQGA1UECgwNVUFOQVRBQ0EgUy5BLjEVMBMGA1UECwwMVFNQLVVBTkFUQUNB MRowGAYDVQQDDBFVQU5BVEFDQSBDQTIgMjAxNjEYMBYGA1UEYQwPVkFURVMtQTY2NzIxNDk5MB4X DTI1MDEyNTE3NTcwMFoXDTI2MDEyNTE3NTcwMFowgdsxCzAJBgNVBAYTAkVDMRswGQYDVQQKDBJB TE9CQU1CQSBDSUEuIExUREExGDAWBgNVBAwMD0dFUkVOVEUgR0VORVJBTDEZMBcGA1UEBAwQR1VF UlJFUk8gU0FOQ0hFWjEXMBUGA1UEKgwORURJU09OIE9STEFORE8xGTAXBgNVBAUTEElEQ0VDLTE4 MDQzMjgxNzUxKDAmBgNVBAMMH0VESVNPTiBPUkxBTkRPIEdVRVJSRVJPIFNBTkNIRVoxHDAaBgNV BGEME1ZBVEVDLTE4OTAxNDE1MDgwMDEwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDX fqZDaadWFHaLZ/lpEluSsHrTcy7FC0TQ0q0fq9a9uxrTlsN/mnDPKf63IUQtuTc94KTsXqUGC8ZH Vm88mFyEUBSrB6/38Ma3htVgRwXXkbIzspDicDhtN274gjAzfT96OgQNx84OHELr/27aMKHToGMt 8wxaIF0UP+3SIMTz5BaiJ6++27jQekO/DyRHsGTyA54FnGQZ5k+16W9dbPiKNiu4Itj7XrO8lbDo FMjl15GsTnDnl8/8AT/N2FD/RKiwB1UXHwPz79ypGuYokrEPpReEoN2k1A3virsLT2+0XrkVV09L cwHRp+U9m8dkvl4fRrKXMC+VP5PGShLazx3rAgMBAAGjggS0MIIEsDAbBgsrBgEEAYLxNmYDAQQM DAoxODA0MzI4MTc1MB4GCysGAQQBgvE2ZgMLBA8MDTE4OTAxNDE1MDgwMDEwgdcGCCsGAQUFBwEB BIHKMIHHMFUGCCsGAQUFBzAChklodHRwOi8vd3d3LnVhbmF0YWNhLmNvbS9wdWJsaWMvZG93bmxv YWQvdHNwX2NlcnRpZmljYXRlcy9zdWJvcmRpbmF0ZTEuY3J0MDYGCCsGAQUFBzABhipodHRwOi8v b2NzcDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvb2NzcC8wNgYIKwYBBQUHMAGGKmh0dHA6Ly9v Y3NwMi51YW5hdGFjYS5jb20vcHVibGljL3BraS9vY3NwLzAdBgNVHQ4EFgQUU6r5UFxH8auja6+M R15GTYvGB7owDAYDVR0TAQH/BAIwADAfBgNVHSMEGDAWgBR9V+dgc84HRqnio2jw4RGydJJz/TCB jgYDVR0gBIGGMIGDMIGABgwrBgEEAYLxNmYCAwEwcDA3BggrBgEFBQcCARYraHR0cHM6Ly93d3cu dWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvZHBjLWVjLzA1BggrBgEFBQcCAjApDCdDRVJUSUZJQ0FE TyBERSBSRVBSRVNFTlRBTlRFIEVOIEFSQ0hJVk8wgY8GA1UdHwSBhzCBhDBAoD6gPIY6aHR0cDov L2NybDEudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRhLmNybDBAoD6g PIY6aHR0cDovL2NybDIudWFuYXRhY2EuY29tL3B1YmxpYy9wa2kvY3JsL0NBMnN1Ym9yZGluYWRh LmNybDAOBgNVHQ8BAf8EBAMCBeAwHQYDVR0lBBYwFAYIKwYBBQUHAwIGCCsGAQUFBwMEMIIB9QYD VR0RBIIB7DCCAeiBG2x1Y3ljYXJ2YWphbHNhbkBob3RtYWlsLmNvbaAbBgsrBgEEAYLxNmYDAaAM DAoxODA0MzI4MTc1oB8GCysGAQQBgvE2ZgMCoBAMDkVESVNPTiBPUkxBTkRPoBkGCysGAQQBgvE2 ZgMDoAoMCEdVRVJSRVJPoBgGCysGAQQBgvE2ZgMEoAkMB1NBTkNIRVqgIAYLKwYBBAGC8TZmAwWg EQwPR0VSRU5URSBHRU5FUkFMoF8GCysGAQQBgvE2ZgMHoFAMTkJBUlJJTzogQUxPQkFNQkEgQ0FM TEU6IFBSSU5DSVBBTCBOTUVSTzogUy9OIENBUlJFVEVSQTogUEFOQU1FUklDQU5BIFNVUiBLSUxN RaAfBgsrBgEEAYLxNmYDCKAQDA4wMDU5Mzk5ODg4MDU4NaAYBgsrBgEEAYLxNmYDCaAJDAdUSVNB TEVPoCMGCysGAQQBgvE2ZgMKoBQMEkFMT0JBTUJBIENJQS4gTFREQaAeBgsrBgEEAYLxNmYDC6AP DA0xODkwMTQxNTA4MDAxoBMGCysGAQQBgvE2ZgMMoAQMAkVDoCQGCysGAQQBgvE2ZgMyoBUME1JF UFJFU0VOVEFOVEUgTEVHQUygGAYLKwYBBAGC8TZmAzOgCQwHQVJDSElWTzANBgkqhkiG9w0BAQsF AAOCAgEAD0LO0PfHcMxjebQb3MqjXgLxL9MQXDVXSWUygGH8nAShM0HC6tBcOcDayC3M7C7y1ble QyWDT8NQjnAgAOv2pvZ8Mjku4JuEPG3G2NoIY/2bgwpr3ZXNMYm1rfx/MZAl0pRP5AuUxiF0zk6w TYOgmz5PyPu7lZhQKJieyPDdj1hLI77KSo1RzeNTytfDfH/SDefKW6MVajweFg8u/bjzCfMrXSMe GuADKOzOKm54WGwF+gwP0yZ6KdsGVRQ1gUUYcSCkJHUbW3AJmGVzRIi4q6oz/T1NUOdro1rqpIAk 8PMwwDn2+WZ0Vzsp+c7XUdWF1vdesrMqfD/kYBRYiZyIwr1S1nlphXy1abTEdPp8o1SZufWr/pr6 triA3Te9yifjWmHeh+5/b3IPVRn+tgwhzxODpGw1VD0ZAdLQR3amylMVxhusyCHtoNlT490JfWvm TcvGOx9waSe8d/ZFY6V+Ho3Mfske5RQYMwRH6jLRTz+eVKSWEAzs8uCUYKO77S/SKKwNe1mxYcS2 kClizpMr1ahTWL9O6tNdEzZIxeeOs0amr5YFE9b+CxcogVdmSMN2XYVtZEdRNJmuokd4aU6xyXtN VI+uTZ84hHbCGYEcpAbPlsfRTR0WvHE6Mo9V1GyalSuXVbNFjQK15p2oRYbXEi9BwTmC2ks+orVe 9M+MEjE= </ds:X509Certificate> </ds:X509Data> <ds:KeyValue> <ds:RSAKeyValue> <ds:Modulus> 136mQ2mnVhR2i2f5aRJbkrB603MuxQtE0NKtH6vWvbsa05bDf5pwzyn+tyFELbk3PeCk7F6lBgvG R1ZvPJhchFAUqwev9/DGt4bVYEcF15GyM7KQ4nA4bTdu+IIwM30/ejoEDcfODhxC6/9u2jCh06Bj LfMMWiBdFD/t0iDE8+QWoievvtu40HpDvw8kR7Bk8gOeBZxkGeZPtelvXWz4ijYruCLY+16zvJWw 6BTI5deRrE5w55fP/AE/zdhQ/0SosAdVFx8D8+/cqRrmKJKxD6UXhKDdpNQN74q7C09vtF65FVdP S3MB0aflPZvHZL5eH0aylzAvlT+TxkoS2s8d6w== </ds:Modulus> <ds:Exponent>AQAB</ds:Exponent> </ds:RSAKeyValue> </ds:KeyValue> </ds:KeyInfo> <ds:Object Id="Signature644133-Object918990"><etsi:QualifyingProperties Target="#Signature644133"><etsi:SignedProperties Id="Signature644133-SignedProperties258604"><etsi:SignedSignatureProperties><etsi:SigningTime>2025-11-18T21:40:00-05:00</etsi:SigningTime><etsi:SigningCertificate><etsi:Cert><etsi:CertDigest><ds:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"/><ds:DigestValue>mwYN0e/y3o3cT5QwPQhgmd7Z2Rk=</ds:DigestValue></etsi:CertDigest><etsi:IssuerSerial><ds:X509IssuerName>2.5.4.97=#0c0f56415445532d413636373231343939,CN=UANATACA CA2 2016,OU=TSP-UANATACA,O=UANATACA S.A.,L=Barcelona (see current address at www.uanataca.com/address),C=ES</ds:X509IssuerName><ds:X509SerialNumber>5283442839888080260</ds:X509SerialNumber></etsi:IssuerSerial></etsi:Cert></etsi:SigningCertificate></etsi:SignedSignatureProperties><etsi:SignedDataObjectProperties><etsi:DataObjectFormat ObjectReference="#Reference-ID-491027"><etsi:Description>contenido comprobante</etsi:Description><etsi:MimeType>text/xml</etsi:MimeType></etsi:DataObjectFormat></etsi:SignedDataObjectProperties></etsi:SignedProperties></etsi:QualifyingProperties></ds:Object></ds:Signature></factura> ]]>
+</comprobante>
+<mensajes/>
+</autorizacion>
