@@ -180,7 +180,7 @@ class Database {
             // INGRESOS
             { codigo: '4', nombre: 'INGRESOS', tipo: 'grupo', nivel: 1, padre: null },
             { codigo: '4.1', nombre: 'INGRESOS OPERACIONALES', tipo: 'grupo', nivel: 2, padre: '4' },
-            { codigo: '4.1.01', nombre: 'VENTAS TARIFA 12%', tipo: 'detalle', nivel: 3, padre: '4.1', naturaleza: 'acreedora' },
+            { codigo: '4.1.01', nombre: 'VENTAS TARIFA 15%', tipo: 'detalle', nivel: 3, padre: '4.1', naturaleza: 'acreedora' },
             { codigo: '4.1.02', nombre: 'VENTAS TARIFA 0%', tipo: 'detalle', nivel: 3, padre: '4.1', naturaleza: 'acreedora' },
             { codigo: '4.2', nombre: 'OTROS INGRESOS', tipo: 'detalle', nivel: 2, padre: '4', naturaleza: 'acreedora' },
 

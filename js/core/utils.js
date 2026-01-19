@@ -398,7 +398,7 @@ const Utils = {
         // HABER: Ventas
         asiento.detalles.push({
             cuentaCodigo: '4.1.01',
-            cuentaNombre: 'Ventas Tarifa 12%',
+            cuentaNombre: 'Ventas Tarifa 15%',
             debe: 0,
             haber: venta.subtotal
         });

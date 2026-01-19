@@ -54,7 +54,7 @@ class ContabilidadModule {
                 // INGRESOS
                 { codigo: '4', nombre: 'INGRESOS', tipo: 'Ingreso', nivel: 1, padre: null },
                 { codigo: '4.1', nombre: 'INGRESOS OPERACIONALES', tipo: 'Ingreso', nivel: 2, padre: '4' },
-                { codigo: '4.1.01', nombre: 'Ventas Tarifa 12%', tipo: 'Ingreso', nivel: 3, padre: '4.1' },
+                { codigo: '4.1.01', nombre: 'Ventas Tarifa 15%', tipo: 'Ingreso', nivel: 3, padre: '4.1' },
                 { codigo: '4.1.02', nombre: 'Ventas Tarifa 0%', tipo: 'Ingreso', nivel: 3, padre: '4.1' },
                 { codigo: '4.2', nombre: 'OTROS INGRESOS', tipo: 'Ingreso', nivel: 2, padre: '4' },
 
