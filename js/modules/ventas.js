@@ -439,7 +439,7 @@ class VentasModule {
                                     <strong id="displaySubtotal">$0.00</strong>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                    <span>IVA 12%:</span>
+                                    <span>IVA 15%:</span>
                                     <strong id="displayIVA">$0.00</strong>
                                 </div>
                                 <div style="display: flex; justify-content: space-between; font-size: 1.25rem; color: var(--color-primary);">
@@ -602,8 +602,8 @@ class VentasModule {
             const subtotalDetalle = detalle.cantidad * detalle.precioUnitario;
             subtotal += subtotalDetalle;
 
-            if (detalle.tarifaIVA === 12) {
-                iva += subtotalDetalle * 0.12;
+            if (detalle.tarifaIVA === 15) {
+                iva += subtotalDetalle * 0.15;
             }
         });
 
@@ -673,7 +673,7 @@ class VentasModule {
             subtotal: this.currentVenta.subtotal,
             descuento: 0,
             subtotalNeto: this.currentVenta.subtotal,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             iva: this.currentVenta.iva,
             total: this.currentVenta.total,
             estado: formaPago === 'Crédito' ? 'pendiente' : 'pagada',
@@ -790,7 +790,7 @@ class VentasModule {
                                 <strong>${Utils.formatCurrency(venta.subtotal)}</strong>
                             </div>
                             <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                                <span>IVA 12%:</span>
+                                <span>IVA 15%:</span>
                                 <strong>${Utils.formatCurrency(venta.iva)}</strong>
                             </div>
                             <div style="display: flex; justify-content: space-between; font-size: 1.25rem;">

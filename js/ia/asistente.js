@@ -225,7 +225,7 @@ class AIAssistant {
         // Verificar facturas sin IVA aplicado correctamente
         const ventas = db.get('ventas') || [];
         const ventasSinIVA = ventas.filter(v => {
-            if (v.tarifaIVA === 12 && (!v.iva || v.iva === 0)) {
+            if (v.tarifaIVA === 15 && (!v.iva || v.iva === 0)) {
                 return true;
             }
             return false;

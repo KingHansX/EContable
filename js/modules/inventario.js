@@ -408,7 +408,7 @@ class InventarioModule {
                                 <div class="form-group">
                                     <label class="form-label form-label-required">Tarifa IVA</label>
                                     <select class="form-select" id="tarifaIVA" required>
-                                        <option value="12" ${producto?.tarifaIVA === 12 ? 'selected' : ''}>12%</option>
+                                        <option value="15" ${producto?.tarifaIVA === 15 ? 'selected' : ''}>15%</option>
                                         <option value="0" ${producto?.tarifaIVA === 0 ? 'selected' : ''}>0%</option>
                                     </select>
                                 </div>

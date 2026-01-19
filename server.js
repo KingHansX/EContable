@@ -567,9 +567,9 @@ function generateFacturaXML(venta, numero, fecha, subtotal, iva, total) {
                 <impuesto>
                     <codigo>2</codigo>
                     <codigoPorcentaje>2</codigoPorcentaje>
-                    <tarifa>12</tarifa>
+                    <tarifa>15</tarifa>
                     <baseImponible>${(d.cantidad * d.precio).toFixed(2)}</baseImponible>
-                    <valor>${(d.cantidad * d.precio * 0.12).toFixed(2)}</valor>
+                    <valor>${(d.cantidad * d.precio * 0.15).toFixed(2)}</valor>
                 </impuesto>
             </impuestos>
         </detalle>`).join('')}

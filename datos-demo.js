@@ -102,7 +102,7 @@ function cargarDatosDemo() {
             precioVenta: 899.00,
             stock: 15,
             stockMinimo: 5,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             activo: true
         },
         {
@@ -115,7 +115,7 @@ function cargarDatosDemo() {
             precioVenta: 15.00,
             stock: 45,
             stockMinimo: 20,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             activo: true
         },
         {
@@ -128,7 +128,7 @@ function cargarDatosDemo() {
             precioVenta: 12.00,
             stock: 30,
             stockMinimo: 15,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             activo: true
         },
         {
@@ -141,7 +141,7 @@ function cargarDatosDemo() {
             precioVenta: 229.00,
             stock: 8,
             stockMinimo: 5,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             activo: true
         },
         {
@@ -154,7 +154,7 @@ function cargarDatosDemo() {
             precioVenta: 8.00,
             stock: 3,
             stockMinimo: 10,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             activo: true
         },
         {
@@ -167,7 +167,7 @@ function cargarDatosDemo() {
             precioVenta: 25.00,
             stock: 0,
             stockMinimo: 0,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             activo: true
         }
     ];
@@ -187,7 +187,7 @@ function cargarDatosDemo() {
             subtotal: 1798.00,
             descuento: 0,
             subtotalNeto: 1798.00,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             iva: 215.76,
             total: 2013.76,
             estado: 'pagada',
@@ -204,7 +204,7 @@ function cargarDatosDemo() {
             subtotal: 899.00,
             descuento: 0,
             subtotalNeto: 899.00,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             iva: 107.88,
             total: 1006.88,
             estado: 'pendiente',
@@ -222,7 +222,7 @@ function cargarDatosDemo() {
             subtotal: 458.00,
             descuento: 0,
             subtotalNeto: 458.00,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             iva: 54.96,
             total: 512.96,
             estado: 'pagada',
@@ -239,7 +239,7 @@ function cargarDatosDemo() {
             subtotal: 150.00,
             descuento: 0,
             subtotalNeto: 150.00,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             iva: 18.00,
             total: 168.00,
             estado: 'pagada',
@@ -256,7 +256,7 @@ function cargarDatosDemo() {
             subtotal: 229.00,
             descuento: 0,
             subtotalNeto: 229.00,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             iva: 27.48,
             total: 256.48,
             estado: 'pendiente',
@@ -280,7 +280,7 @@ function cargarDatosDemo() {
             subtotal: 3250.00,
             descuento: 0,
             subtotalNeto: 3250.00,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             iva: 390.00,
             total: 3640.00,
             estado: 'pagada',
@@ -297,7 +297,7 @@ function cargarDatosDemo() {
             subtotal: 580.00,
             descuento: 0,
             subtotalNeto: 580.00,
-            tarifaIVA: 12,
+            tarifaIVA: 15,
             iva: 69.60,
             total: 649.60,
             estado: 'pendiente',
