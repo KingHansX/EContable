@@ -4,7 +4,7 @@
  */
 
 // Configuración de Firebase
-export const firebaseConfig = {
+window.firebaseConfig = {
     apiKey: "AIzaSyDBpSNaXo_z6Z22PNmAPHkBaSaTQM-jrCo",
     authDomain: "econtable-96a54.firebaseapp.com",
     projectId: "econtable-96a54",

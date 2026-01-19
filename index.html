@@ -336,8 +336,11 @@
     <!-- Modal Container -->
     <div id="modalContainer"></div>
 
-    <!-- Firebase SDK (Modular) -->
-    <script type="module" src="js/core/firebase-db.js"></script>
+    <!-- Firebase SDK (Compat version for compatibility) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="js/core/firebase-config.js"></script>
+    <script src="js/core/firebase-db.js"></script>
 
     <!-- Scripts del Sistema -->
     <script src="js/core/database.js"></script>
