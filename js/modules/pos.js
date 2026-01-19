@@ -12,11 +12,11 @@ class POSModule {
         this.init();
     }
 
-    init() {
+    async init() {
         // En una app real, esto podría recargarse cada vez que se entra al módulo
     }
 
-    async loadData() {
+    async async loadData() {
         try {
             if (db.useBackend) {
                 // Cargar productos
@@ -27,8 +27,8 @@ class POSModule {
                 const resCli = await fetch(`${db.apiUrl}/personas?tipo=cliente`);
                 this.clients = await resCli.json();
             } else {
-                this.products = db.find('productos', { activo: true }) || [];
-                this.clients = db.find('clientes') || [];
+                this.products = await db.get('productos', { activo: true }) || [];
+                this.clients = await db.get('clientes') || [];
             }
             // Consumidor final por defecto
             this.currentClient = this.clients.find(c => c.identificacion === '9999999999999') || {
@@ -45,7 +45,7 @@ class POSModule {
     async render(container) {
         if (!container) return;
 
-        await this.loadData();
+        await await this.loadData();
 
         container.innerHTML = `
             <div class="pos-container" style="display: flex; gap: 20px; height: calc(100vh - 140px);">
@@ -281,7 +281,7 @@ class POSModule {
 
                 this.cart = [];
                 this.updateCartUI();
-                this.loadData();
+                await this.loadData();
             } catch (e) {
                 console.error(e);
                 Utils.showToast('Error al procesar venta: ' + e.message, 'error');

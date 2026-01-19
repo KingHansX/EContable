@@ -10,13 +10,13 @@ class ReportesModule {
         this.init();
     }
 
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
     }
 
-    loadData() {
-        this.ventas = db.find('ventas') || [];
-        this.compras = db.find('compras') || [];
+    async loadData() {
+        this.ventas = await db.get('ventas') || [];
+        this.compras = await db.get('compras') || [];
     }
 
     render(container) {
@@ -371,7 +371,7 @@ class ReportesModule {
         const anio = parseInt(document.getElementById('reporteAnio').value);
 
         // Obtener datos de la empresa
-        const empresas = db.find('empresas') || [];
+        const empresas = await db.get('empresas') || [];
         if (empresas.length === 0) {
             Utils.showToast('Debes configurar los datos de tu empresa primero', 'warning');
             return;
@@ -472,7 +472,7 @@ class ReportesModule {
      */
     generarAnexoGastosPersonales() {
         const anio = parseInt(document.getElementById('reporteAnio').value);
-        const gastos = db.find('gastosPersonales') || [];
+        const gastos = await db.get('gastosPersonales') || [];
 
         const gastosAnio = gastos.filter(g => {
             const fecha = new Date(g.fecha);

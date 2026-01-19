@@ -16,13 +16,13 @@ class UsuariosModule {
         this.init();
     }
 
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
         this.initializeDefaultUser();
     }
 
-    loadData() {
-        this.usuarios = db.find('usuarios') || [];
+    async loadData() {
+        this.usuarios = await db.get('usuarios') || [];
     }
 
     initializeDefaultUser() {
@@ -450,7 +450,7 @@ class UsuariosModule {
             }
 
             document.getElementById('modalContainer').innerHTML = '';
-            this.loadData();
+            await this.loadData();
             this.renderUsuarios();
 
         } catch (error) {
@@ -460,7 +460,7 @@ class UsuariosModule {
     }
 
     viewUsuario(id) {
-        const usuario = db.findById('usuarios', id);
+        const usuario = await db.findById('usuarios', id);
         if (!usuario) return;
 
         const rol = this.roles.find(r => r.id === usuario.rol);
@@ -535,14 +535,14 @@ class UsuariosModule {
     }
 
     editUsuario(id) {
-        const usuario = db.findById('usuarios', id);
+        const usuario = await db.findById('usuarios', id);
         if (usuario) {
             this.showUsuarioModal(usuario);
         }
     }
 
     deleteUsuario(id) {
-        const usuario = db.findById('usuarios', id);
+        const usuario = await db.findById('usuarios', id);
         if (!usuario) return;
 
         if (usuario.username === 'admin') {
@@ -555,7 +555,7 @@ class UsuariosModule {
             () => {
                 db.remove('usuarios', id);
                 Utils.showToast('Usuario eliminado correctamente', 'success');
-                this.loadData();
+                await this.loadData();
                 this.renderUsuarios();
             }
         );

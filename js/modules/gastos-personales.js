@@ -17,12 +17,12 @@ class GastosPersonalesModule {
         this.init();
     }
 
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
     }
 
-    loadData() {
-        this.gastos = db.find('gastosPersonales') || [];
+    async loadData() {
+        this.gastos = await db.get('gastosPersonales') || [];
     }
 
     render(container) {
@@ -548,7 +548,7 @@ class GastosPersonalesModule {
             }
 
             document.getElementById('modalContainer').innerHTML = '';
-            this.loadData();
+            await this.loadData();
 
             // Re-renderizar todo el módulo para actualizar stats
             const container = document.querySelector('.gastos-personales-module').parentElement;
@@ -561,7 +561,7 @@ class GastosPersonalesModule {
     }
 
     viewGasto(id) {
-        const gasto = db.findById('gastosPersonales', id);
+        const gasto = await db.findById('gastosPersonales', id);
         if (!gasto) return;
 
         const categoria = this.categorias.find(c => c.id === gasto.categoria);
@@ -635,14 +635,14 @@ class GastosPersonalesModule {
     }
 
     editGasto(id) {
-        const gasto = db.findById('gastosPersonales', id);
+        const gasto = await db.findById('gastosPersonales', id);
         if (gasto) {
             this.showGastoModal(gasto);
         }
     }
 
     deleteGasto(id) {
-        const gasto = db.findById('gastosPersonales', id);
+        const gasto = await db.findById('gastosPersonales', id);
         if (!gasto) return;
 
         Utils.confirm(
@@ -650,7 +650,7 @@ class GastosPersonalesModule {
             () => {
                 db.remove('gastosPersonales', id);
                 Utils.showToast('Gasto eliminado correctamente', 'success');
-                this.loadData();
+                await this.loadData();
 
                 // Re-renderizar
                 const container = document.querySelector('.gastos-personales-module').parentElement;
@@ -683,7 +683,7 @@ class GastosPersonalesModule {
         const categoria = document.getElementById('filterCategoria')?.value;
         const mes = parseInt(document.getElementById('filterMes')?.value);
 
-        let filtered = db.find('gastosPersonales') || [];
+        let filtered = await db.get('gastosPersonales') || [];
 
         if (anio) {
             filtered = filtered.filter(g => {
@@ -705,7 +705,7 @@ class GastosPersonalesModule {
 
         this.gastos = filtered;
         this.renderGastos();
-        this.gastos = db.find('gastosPersonales') || [];
+        this.gastos = await db.get('gastosPersonales') || [];
     }
 
     getAniosDisponibles() {

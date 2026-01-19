@@ -11,11 +11,11 @@ class BancosModule {
         this.init();
     }
 
-    async init() {
-        await this.loadData();
+    async async init() {
+        await await this.loadData();
     }
 
-    async loadData() {
+    async async loadData() {
         // Cargar desde DB local o Backend
         if (db.useBackend) {
             try {
@@ -23,7 +23,7 @@ class BancosModule {
                 this.cuentas = await res.json();
             } catch (e) { console.error(e); }
         } else {
-            this.cuentas = db.find('cuentas_bancarias') || [];
+            this.cuentas = await db.get('cuentas_bancarias') || [];
         }
     }
 
@@ -331,7 +331,7 @@ class BancosModule {
 
         document.getElementById('modalContainer').innerHTML = '';
         Utils.showToast('Cuenta creada exitosamente', 'success');
-        await this.loadData();
+        await await this.loadData();
         this.render(document.getElementById('module-bancos')); // Re-render
     }
 
@@ -416,7 +416,7 @@ class BancosModule {
             Utils.showToast(`${tipoMov} registrado correctamente`, 'success');
 
             // Recargar datos
-            await this.loadData(); // Para saldo actualizado en lista
+            await await this.loadData(); // Para saldo actualizado en lista
             await this.selectCuenta(this.currentCuenta.id); // Para tabla movimientos y header
             this.render(document.getElementById('module-bancos')); // Re-render completo para actualizar saldos sidebar
             // Reseleccionar (un poco hacky)

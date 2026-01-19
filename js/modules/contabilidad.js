@@ -10,12 +10,12 @@ class ContabilidadModule {
         this.init();
     }
 
-    async init() {
-        await this.loadData();
+    async async init() {
+        await await this.loadData();
         this.initializePlanCuentas();
     }
 
-    async loadData() {
+    async async loadData() {
         this.asientos = await db.get('asientos') || [];
         this.cuentas = await db.get('planCuentas') || [];
     }
@@ -184,9 +184,9 @@ class ContabilidadModule {
 
     calculateStats() {
         // Calcular balances desde ventas y compras
-        const ventas = db.find('ventas') || [];
-        const compras = db.find('compras') || [];
-        const productos = db.find('productos') || [];
+        const ventas = await db.get('ventas') || [];
+        const compras = await db.get('compras') || [];
+        const productos = await db.get('productos') || [];
 
         // Activos
         const inventario = productos.reduce((sum, p) => sum + ((p.stock || 0) * (p.precioCompra || 0)), 0);
@@ -387,9 +387,9 @@ class ContabilidadModule {
 
     // CONTINUARÁ EN EL SIGUIENTE MENSAJE...
     showBalanceComprobacion() {
-        const ventas = db.find('ventas') || [];
-        const compras = db.find('compras') || [];
-        const productos = db.find('productos') || [];
+        const ventas = await db.get('ventas') || [];
+        const compras = await db.get('compras') || [];
+        const productos = await db.get('productos') || [];
 
         // Calcular saldos por cuenta
         const saldos = this.calcularSaldosCuentas(ventas, compras, productos);
@@ -571,9 +571,9 @@ class ContabilidadModule {
     }
 
     showBalanceGeneral() {
-        const ventas = db.find('ventas') || [];
-        const compras = db.find('compras') || [];
-        const productos = db.find('productos') || [];
+        const ventas = await db.get('ventas') || [];
+        const compras = await db.get('compras') || [];
+        const productos = await db.get('productos') || [];
 
         const balance = this.calcularBalanceGeneral(ventas, compras, productos);
 
@@ -740,8 +740,8 @@ class ContabilidadModule {
     }
 
     showEstadoResultados() {
-        const ventas = db.find('ventas') || [];
-        const compras = db.find('compras') || [];
+        const ventas = await db.get('ventas') || [];
+        const compras = await db.get('compras') || [];
 
         const estado = this.calcularEstadoResultados(ventas, compras);
 
@@ -852,7 +852,7 @@ class ContabilidadModule {
     }
 
     viewAsiento(id) {
-        const asiento = db.findById('asientos', id);
+        const asiento = await db.findById('asientos', id);
         if (!asiento) return;
 
         const modalContainer = document.getElementById('modalContainer');

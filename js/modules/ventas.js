@@ -15,17 +15,17 @@ class VentasModule {
     /**
      * Inicializa el módulo
      */
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
     }
 
     /**
      * Carga los datos
      */
-    loadData() {
-        this.ventas = db.find('ventas') || [];
-        this.clientes = db.find('clientes') || [];
-        this.productos = db.find('productos', { activo: true }) || [];
+    async loadData() {
+        this.ventas = await db.get('ventas') || [];
+        this.clientes = await db.get('clientes') || [];
+        this.productos = await db.get('productos', { activo: true }) || [];
     }
 
     /**
@@ -690,7 +690,7 @@ class VentasModule {
 
             // Actualizar inventario
             this.currentVenta.detalles.forEach(detalle => {
-                const producto = db.findById('productos', detalle.productoId);
+                const producto = await db.findById('productos', detalle.productoId);
                 if (producto) {
                     db.update('productos', producto.id, {
                         stock: (producto.stock || 0) - detalle.cantidad
@@ -702,7 +702,7 @@ class VentasModule {
             document.getElementById('modalContainer').innerHTML = '';
             this.currentVenta = null;
 
-            this.loadData();
+            await this.loadData();
             this.renderVentas();
 
             // Actualizar stats
@@ -728,7 +728,7 @@ class VentasModule {
      * Ver venta
      */
     viewVenta(id) {
-        const venta = db.findById('ventas', id);
+        const venta = await db.findById('ventas', id);
         if (!venta) return;
 
         const modalContainer = document.getElementById('modalContainer');
@@ -835,7 +835,7 @@ class VentasModule {
      * Registra un pago
      */
     registerPayment(id) {
-        const venta = db.findById('ventas', id);
+        const venta = await db.findById('ventas', id);
         if (!venta) return;
 
         Utils.confirm(
@@ -843,7 +843,7 @@ class VentasModule {
             () => {
                 db.update('ventas', id, { estado: 'pagada' });
                 Utils.showToast('Pago registrado correctamente', 'success');
-                this.loadData();
+                await this.loadData();
                 this.renderVentas();
             }
         );
@@ -874,7 +874,7 @@ class VentasModule {
         const periodo = document.getElementById('filterPeriodo')?.value;
         const clienteId = document.getElementById('filterCliente')?.value;
 
-        let filtered = db.find('ventas') || [];
+        let filtered = await db.get('ventas') || [];
 
         // Filtro de estado
         if (estado) {
@@ -916,7 +916,7 @@ class VentasModule {
 
         this.ventas = filtered;
         this.renderVentas();
-        this.ventas = db.find('ventas') || [];
+        this.ventas = await db.get('ventas') || [];
     }
 }
 

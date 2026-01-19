@@ -14,7 +14,7 @@ class AIAssistant {
     /**
      * Inicializa el asistente IA
      */
-    init() {
+    async init() {
         this.loadConversationHistory();
         this.generateAlerts();
         this.setupEventListeners();

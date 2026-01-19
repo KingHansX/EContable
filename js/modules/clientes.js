@@ -14,16 +14,16 @@ class ClientesModule {
     /**
      * Inicializa el módulo
      */
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
     }
 
     /**
      * Carga los datos
      */
-    loadData() {
-        this.clientes = db.find('clientes') || [];
-        this.proveedores = db.find('proveedores') || [];
+    async loadData() {
+        this.clientes = await db.get('clientes') || [];
+        this.proveedores = await db.get('proveedores') || [];
     }
 
     /**
@@ -606,7 +606,7 @@ class ClientesModule {
             }
 
             document.getElementById('modalContainer').innerHTML = '';
-            this.loadData();
+            await this.loadData();
             this.renderClientes();
             this.renderProveedores();
 
@@ -621,7 +621,7 @@ class ClientesModule {
      */
     viewContacto(type, id) {
         const table = type === 'cliente' ? 'clientes' : 'proveedores';
-        const contacto = db.findById(table, id);
+        const contacto = await db.findById(table, id);
         if (!contacto) return;
 
         const modalContainer = document.getElementById('modalContainer');
@@ -707,7 +707,7 @@ class ClientesModule {
      */
     editContacto(type, id) {
         const table = type === 'cliente' ? 'clientes' : 'proveedores';
-        const contacto = db.findById(table, id);
+        const contacto = await db.findById(table, id);
         if (contacto) {
             this.showContactoModal(type, contacto);
         }
@@ -718,7 +718,7 @@ class ClientesModule {
      */
     deleteContacto(type, id) {
         const table = type === 'cliente' ? 'clientes' : 'proveedores';
-        const contacto = db.findById(table, id);
+        const contacto = await db.findById(table, id);
         if (!contacto) return;
 
         const isCliente = type === 'cliente';
@@ -729,7 +729,7 @@ class ClientesModule {
                 db.remove(table, id);
                 Utils.showToast(`${isCliente ? 'Cliente' : 'Proveedor'} eliminado correctamente`, 'success');
 
-                this.loadData();
+                await this.loadData();
                 this.renderClientes();
                 this.renderProveedores();
             }

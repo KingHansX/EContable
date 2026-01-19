@@ -10,13 +10,13 @@ class CuentasModule {
         this.init();
     }
 
-    init() {
-        this.loadData();
+    async init() {
+        await this.loadData();
     }
 
-    loadData() {
+    async loadData() {
         // Cargar ventas pendientes (cuentas por cobrar)
-        const ventas = db.find('ventas', { estado: 'pendiente' }) || [];
+        const ventas = await db.get('ventas', { estado: 'pendiente' }) || [];
         this.cuentasCobrar = ventas.map(v => ({
             id: v.id,
             tipo: 'cobrar',
@@ -30,7 +30,7 @@ class CuentasModule {
         }));
 
         // Cargar compras pendientes (cuentas por pagar)
-        const compras = db.find('compras', { estado: 'pendiente' }) || [];
+        const compras = await db.get('compras', { estado: 'pendiente' }) || [];
         this.cuentasPagar = compras.map(c => ({
             id: c.id,
             tipo: 'pagar',
@@ -423,7 +423,7 @@ class CuentasModule {
 
     registrarPago(id, tipo) {
         const tabla = tipo === 'venta' ? 'ventas' : 'compras';
-        const registro = db.findById(tabla, id);
+        const registro = await db.findById(tabla, id);
 
         if (!registro) return;
 
@@ -433,7 +433,7 @@ class CuentasModule {
                 db.update(tabla, id, { estado: 'pagada' });
                 Utils.showToast(`${tipo === 'venta' ? 'Cobro' : 'Pago'} registrado correctamente`, 'success');
 
-                this.loadData();
+                await this.loadData();
 
                 // Re-renderizar el módulo
                 const container = document.querySelector('.cuentas-module').parentElement;
